@@ -1,0 +1,7 @@
+---
+layout: post
+title: "bug"
+date: 2014-09-10 22:09:43 +0800
+comments: true
+categories: 
+---

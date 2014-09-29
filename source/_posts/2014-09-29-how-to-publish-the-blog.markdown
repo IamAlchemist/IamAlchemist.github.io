@@ -11,5 +11,10 @@ categories:
     rake watch
     rake preview
     rake deploy
+
+    git add .
+    git commit -m "new blog"
+    git push origin source
+
     cd _deploy
     git push -u gitcafe master:gitcafe-pages

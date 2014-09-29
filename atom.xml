@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-09-29T21:43:06+08:00</updated>
+  <updated>2014-09-29T21:50:54+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -23,55 +23,14 @@ rake generate
 rake watch
 rake preview
 rake deploy
+
+git add .
+git commit -m "new blog"
+git push origin source
+
 cd _deploy
 git push -u gitcafe master:gitcafe-pages
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Bug]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/09/10/bug/"/>
-    <updated>2014-09-10T22:09:43+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/09/10/bug</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Post Blog in Gitcafe]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/09/10/vpn-is-necessary/"/>
-    <updated>2014-09-10T21:56:25+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/09/10/vpn-is-necessary</id>
-    <content type="html"><![CDATA[<p>ok, let me learn some skills to create the blog, interesting</p>
-
-<pre><code>rake new_page["title"]
-rake generate
-rake watch
-rake preview
-cd _deploy
-git push -u gitcafe master:gitcafe-pages
-</code></pre>
-
-<p>done</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[First Blog]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/09/10/first-blog/"/>
-    <updated>2014-09-10T21:51:34+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/09/10/first-blog</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[New Life]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/09/10/new-life/"/>
-    <updated>2014-09-10T08:20:07+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/09/10/new-life</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   

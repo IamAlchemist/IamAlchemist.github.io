@@ -10,49 +10,17 @@
     <priority>0.8</priority>
   </url>
   
-  <url>
-    <loc>http://IamAlchemist.github.io/blog/2014/09/10/bug/</loc>
-    
-    <lastmod>2014-09-10T22:09:43+08:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>http://IamAlchemist.github.io/blog/2014/09/10/vpn-is-necessary/</loc>
-    
-    <lastmod>2014-09-10T21:56:25+08:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>http://IamAlchemist.github.io/blog/2014/09/10/first-blog/</loc>
-    
-    <lastmod>2014-09-10T21:51:34+08:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>http://IamAlchemist.github.io/blog/2014/09/10/new-life/</loc>
-    
-    <lastmod>2014-09-10T08:20:07+08:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
   
   <url>
     <loc>http://IamAlchemist.github.io/blog/archives/</loc>
-    <lastmod>2014-09-29T21:43:06+08:00</lastmod>
+    <lastmod>2014-09-29T21:50:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://IamAlchemist.github.io/</loc>
-    <lastmod>2014-09-29T21:43:06+08:00</lastmod>
+    <lastmod>2014-09-29T21:50:54+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

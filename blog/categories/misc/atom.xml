@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Misc | My Octopress Blog]]></title>
+  <link href="http://IamAlchemist.github.io/blog/categories/misc/atom.xml" rel="self"/>
+  <link href="http://IamAlchemist.github.io/"/>
+  <updated>2014-09-29T21:43:06+08:00</updated>
+  <id>http://IamAlchemist.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Post Blog in Gitcafe]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/09/10/vpn-is-necessary/"/>
+    <updated>2014-09-10T21:56:25+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/09/10/vpn-is-necessary</id>
+    <content type="html"><![CDATA[<p>ok, let me learn some skills to create the blog, interesting</p>
+
+<pre><code>rake new_page["title"]
+rake generate
+rake watch
+rake preview
+cd _deploy
+git push -u gitcafe master:gitcafe-pages
+</code></pre>
+
+<p>done</p>
+]]></content>
+  </entry>
+  
+</feed>

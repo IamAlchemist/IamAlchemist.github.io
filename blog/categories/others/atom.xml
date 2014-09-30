@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Others | My Octopress Blog]]></title>
+  <link href="http://IamAlchemist.github.io/blog/categories/others/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
   <updated>2014-09-30T08:13:28+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
@@ -52,27 +52,6 @@ this is a H2
 ****
 
 *thex*
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Publish the Blog]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog/"/>
-    <updated>2014-09-29T21:37:35+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog</id>
-    <content type="html"><![CDATA[<pre><code>rake new_post["title"]
-rake generate
-rake watch
-rake preview
-rake deploy
-
-git add .
-git commit -m "new blog"
-git push origin source
-
-cd _deploy
-git push -u gitcafe master:gitcafe-pages
 </code></pre>
 ]]></content>
   </entry>

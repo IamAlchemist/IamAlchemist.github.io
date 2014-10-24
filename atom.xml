@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-09-30T08:13:28+08:00</updated>
+  <updated>2014-10-24T18:25:24+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A Glance at App Design Pattern]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern/"/>
+    <updated>2014-10-24T18:09:53+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern</id>
+    <content type="html"><![CDATA[<ul>
+<li><p>Model-View-Controller
+<img src="http://IamAlchemist.github.io/images/model_view_controller.png"></p></li>
+<li><p>Delegation: Action on Behalf of Another Object
+<img src="http://IamAlchemist.github.io/images/delegation.png"></p></li>
+<li><p>Protocol: Enabling Communication Between Objects Not Related by Inheritance
+<img src="http://IamAlchemist.github.io/images/protocol.png"></p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Markdown Syntax]]></title>

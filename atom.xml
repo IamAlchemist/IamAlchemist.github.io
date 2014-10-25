@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-10-24T18:25:24+08:00</updated>
+  <updated>2014-10-25T13:58:23+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -25,6 +25,16 @@
 <img src="http://IamAlchemist.github.io/images/delegation.png"></p></li>
 <li><p>Protocol: Enabling Communication Between Objects Not Related by Inheritance
 <img src="http://IamAlchemist.github.io/images/protocol.png"></p></li>
+<li><p>Notification Center: Nofifying Interested Observers of an Event
+<img src="http://IamAlchemist.github.io/images/notificationcenter.png"></p></li>
+<li><p>Target-Action: Encapsulating a Message to be Sent When an Event Occurs
+<img src="http://IamAlchemist.github.io/images/target_action.png"></p></li>
+<li><p>Key-Value Observing: Notifying an Observer When a Value Changes
+<img src="http://IamAlchemist.github.io/images/kvo.png"></p></li>
+<li><p>View hierarchy</p></li>
+<li>Responder chain</li>
+<li>Receptionist</li>
+<li>Category</li>
 </ul>
 
 ]]></content>

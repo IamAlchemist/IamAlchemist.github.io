@@ -15,4 +15,18 @@ categories:
 * Protocol: Enabling Communication Between Objects Not Related by Inheritance
 {% img /images/protocol.png %}
 
+* Notification Center: Nofifying Interested Observers of an Event
+{% img /images/notificationcenter.png %}
+
+* Target-Action: Encapsulating a Message to be Sent When an Event Occurs
+{% img /images/target_action.png %}
+
+* Key-Value Observing: Notifying an Observer When a Value Changes
+{% img /images/kvo.png %}
+
+* View hierarchy
+* Responder chain
+* Receptionist
+* Category
+
 

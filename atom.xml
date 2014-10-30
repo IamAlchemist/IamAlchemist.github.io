@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-10-30T16:03:30+08:00</updated>
+  <updated>2014-10-30T16:57:27+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Lock the Screen in Mac]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac/"/>
+    <updated>2014-10-30T16:46:20+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac</id>
+    <content type="html"><![CDATA[<ul>
+<li>use &ldquo;Automator&rdquo; create a service, then set the input as &ldquo;no input&rdquo;.</li>
+<li><p>drag &ldquo;Run shell script&rdquo; to the editor in right side, then</p>
+
+<pre><code>  '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
+</code></pre></li>
+<li><p>save the service as &ldquo;lockscreen&rdquo;</p></li>
+<li>set the shortcut key for the service in keyboard->shortcut keys</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Core Objects for App]]></title>

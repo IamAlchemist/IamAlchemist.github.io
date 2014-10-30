@@ -9,8 +9,8 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="
-Key objects in a single-window app Key objects in a multi-window app Windows and menus displayed by apps &amp; the system ">
+  <meta name="description" content="use &ldquo;Automator&rdquo; create a service, then set the input as &ldquo;no input&rdquo;.
+drag &ldquo;Run shell script&rdquo; to the editor in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,44 @@ Key objects in a single-window app Key objects in a multi-window app Windows and
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/30/how-to-lock-the-screen-in-mac/">How to Lock the Screen in Mac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-30T16:46:20+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:46 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ul>
+<li>use &ldquo;Automator&rdquo; create a service, then set the input as &ldquo;no input&rdquo;.</li>
+<li><p>drag &ldquo;Run shell script&rdquo; to the editor in right side, then</p>
+
+<pre><code>  '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
+</code></pre></li>
+<li><p>save the service as &ldquo;lockscreen&rdquo;</p></li>
+<li>set the shortcut key for the service in keyboard->shortcut keys</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -266,6 +304,10 @@ git push -u gitcafe master:gitcafe-pages
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/30/how-to-lock-the-screen-in-mac/">How to Lock the Screen in Mac</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/10/27/the-core-objects-for-app/">The Core Objects for App</a>

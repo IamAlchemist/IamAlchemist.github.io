@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-10-25T13:58:23+08:00</updated>
+  <updated>2014-10-30T16:03:30+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Core Objects for App]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app/"/>
+    <updated>2014-10-27T14:20:29+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app</id>
+    <content type="html"><![CDATA[<ul>
+<li><p>Key objects in a single-window app
+<img src="http://IamAlchemist.github.io/images/single-window-app.png"></p></li>
+<li><p>Key objects in a multi-window app
+<img src="http://IamAlchemist.github.io/images/multi-window-app.png"></p></li>
+<li><p>Windows and menus displayed by apps &amp; the system
+<img src="http://IamAlchemist.github.io/images/window_layer_image.png"></p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A Glance at App Design Pattern]]></title>

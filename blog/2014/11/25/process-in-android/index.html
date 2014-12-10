@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Process in Android - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="there are four types of components for an App, , , and , which support &ldquo;android:process&rdquo;. one App can have multi-processes via &ldquo; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2014/11/25/process-in-android">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:IamAlchemist.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Process in Android</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-25T10:24:54+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support &ldquo;android:process&rdquo;.</p>
+
+<p>one App can have multi-processes via &ldquo;android:process&rdquo;, and multi apps can share one process via share the same Linux user ID and signed with the same</p>
+
+<h3>Process lifecycle</h3>
+
+<ul>
+<li><p>Foreground process
+A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
+
+<blockquote><p>It hosts an Activity that the user is interacting with (the Activity&rsquo;s onResume() method has been called).</p>
+
+<p>It hosts a Service that&rsquo;s bound to the activity that the user is interacting with.</p>
+
+<p>It hosts a Service that&rsquo;s running &ldquo;in the foreground&#8221;—the service has called startForeground().</p>
+
+<p>It hosts a Service that&rsquo;s executing one of its lifecycle callbacks (onCreate(), onStart(), or onDestroy()).</p>
+
+<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote></li>
+<li><p>Visible Process</p></li>
+</ul>
+
+
+<p>A process that doesn&rsquo;t have any foreground components, but still can affect what the user sees on screen. A process is considered to be visible if either of the following conditions are true:</p>
+
+<blockquote><p>It hosts an Activity that is not in the foreground, but is still visible to the user (its onPause() method has been called). This might occur, for example, if the foreground activity started a dialog, which allows the previous activity to be seen behind it.</p>
+
+<p>It hosts a Service that&rsquo;s bound to a visible (or foreground) activity.</p></blockquote>
+
+<p>A visible process is considered extremely important and will not be killed unless doing so is required to keep all foreground processes running.</p>
+
+<ul>
+<li>Sevice process</li>
+</ul>
+
+
+<p>A process that is running a service that has been started with the startService() method and does not fall into either of the two higher categories. Although service processes are not directly tied to anything the user sees, they are generally doing things that the user cares about (such as playing music in the background or downloading data on the network), so the system keeps them running unless there&rsquo;s not enough memory to retain them along with all foreground and visible processes.</p>
+
+<ul>
+<li>Background process</li>
+</ul>
+
+
+<p>A process holding an activity that&rsquo;s not currently visible to the user (the activity&rsquo;s onStop() method has been called). These processes have no direct impact on the user experience, and the system can kill them at any time to reclaim memory for a foreground, visible, or service process. Usually there are many background processes running, so they are kept in an <em>LRU (least recently used)</em> list to ensure that the process with the activity that was most recently seen by the user is the last to be killed. If an activity implements its lifecycle methods correctly, and saves its current state, killing its process will not have a visible effect on the user experience, because when the user navigates back to the activity, the activity restores all of its visible state. See the Activities document for information about saving and restoring state.</p>
+
+<ul>
+<li>Empty process
+A process that doesn&rsquo;t hold any active application components. The only reason to keep this kind of process alive is for caching purposes, to improve startup time the next time a component needs to run in it. The system often kills these processes in order to balance overall system resources between process caches and the underlying kernel caches.</li>
+</ul>
+
+
+<h3>Threads</h3>
+
+<ul>
+<li><p>How to access UI thread from other threads</p>
+
+<blockquote><p>Handler</p>
+
+<p>AsyncTask</p>
+
+<p>Others</p>
+
+<blockquote><p>Activity.runOnUiThread(Runable)</p>
+
+<p>View.post(Runnable)</p>
+
+<p>View.postDelayed(Runnable)</p></blockquote></blockquote></li>
+<li><p>Caution 1: need to consider <em>runtime configuration change</em></p></li>
+<li><p>Caution 2: need to consider therad-safe</p></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-25T10:24:54+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/development/'>development</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2014/11/25/process-in-android/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2014/11/25/process-in-android/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/" title="Previous Post: how to package the .so lib in Android Studio">&laquo; how to package the .so lib in Android Studio</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/25/process-in-android/">Process in Android</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/">How to Package the .so Lib in Android Studio</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/18/whats-cookie/">What&#8217;s Cookie</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/30/how-to-lock-the-screen-in-mac/">How to Lock the Screen in Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/27/the-core-objects-for-app/">The Core Objects for App</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

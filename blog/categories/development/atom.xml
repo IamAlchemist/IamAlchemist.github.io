@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Development | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/development/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2014-11-24T11:15:27+08:00</updated>
+  <updated>2014-12-10T12:01:50+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,85 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Process in Android]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/11/25/process-in-android/"/>
+    <updated>2014-11-25T10:24:54+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/11/25/process-in-android</id>
+    <content type="html"><![CDATA[<p>there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support &ldquo;android:process&rdquo;.</p>
+
+<p>one App can have multi-processes via &ldquo;android:process&rdquo;, and multi apps can share one process via share the same Linux user ID and signed with the same</p>
+
+<h3>Process lifecycle</h3>
+
+<ul>
+<li><p>Foreground process
+A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
+
+<blockquote><p>It hosts an Activity that the user is interacting with (the Activity&rsquo;s onResume() method has been called).</p>
+
+<p>It hosts a Service that&rsquo;s bound to the activity that the user is interacting with.</p>
+
+<p>It hosts a Service that&rsquo;s running &ldquo;in the foreground&#8221;—the service has called startForeground().</p>
+
+<p>It hosts a Service that&rsquo;s executing one of its lifecycle callbacks (onCreate(), onStart(), or onDestroy()).</p>
+
+<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote></li>
+<li><p>Visible Process</p></li>
+</ul>
+
+
+<p>A process that doesn&rsquo;t have any foreground components, but still can affect what the user sees on screen. A process is considered to be visible if either of the following conditions are true:</p>
+
+<blockquote><p>It hosts an Activity that is not in the foreground, but is still visible to the user (its onPause() method has been called). This might occur, for example, if the foreground activity started a dialog, which allows the previous activity to be seen behind it.</p>
+
+<p>It hosts a Service that&rsquo;s bound to a visible (or foreground) activity.</p></blockquote>
+
+<p>A visible process is considered extremely important and will not be killed unless doing so is required to keep all foreground processes running.</p>
+
+<ul>
+<li>Sevice process</li>
+</ul>
+
+
+<p>A process that is running a service that has been started with the startService() method and does not fall into either of the two higher categories. Although service processes are not directly tied to anything the user sees, they are generally doing things that the user cares about (such as playing music in the background or downloading data on the network), so the system keeps them running unless there&rsquo;s not enough memory to retain them along with all foreground and visible processes.</p>
+
+<ul>
+<li>Background process</li>
+</ul>
+
+
+<p>A process holding an activity that&rsquo;s not currently visible to the user (the activity&rsquo;s onStop() method has been called). These processes have no direct impact on the user experience, and the system can kill them at any time to reclaim memory for a foreground, visible, or service process. Usually there are many background processes running, so they are kept in an <em>LRU (least recently used)</em> list to ensure that the process with the activity that was most recently seen by the user is the last to be killed. If an activity implements its lifecycle methods correctly, and saves its current state, killing its process will not have a visible effect on the user experience, because when the user navigates back to the activity, the activity restores all of its visible state. See the Activities document for information about saving and restoring state.</p>
+
+<ul>
+<li>Empty process
+A process that doesn&rsquo;t hold any active application components. The only reason to keep this kind of process alive is for caching purposes, to improve startup time the next time a component needs to run in it. The system often kills these processes in order to balance overall system resources between process caches and the underlying kernel caches.</li>
+</ul>
+
+
+<h3>Threads</h3>
+
+<ul>
+<li><p>How to access UI thread from other threads</p>
+
+<blockquote><p>Handler</p>
+
+<p>AsyncTask</p>
+
+<p>Others</p>
+
+<blockquote><p>Activity.runOnUiThread(Runable)</p>
+
+<p>View.post(Runnable)</p>
+
+<p>View.postDelayed(Runnable)</p></blockquote></blockquote></li>
+<li><p>Caution 1: need to consider <em>runtime configuration change</em></p></li>
+<li><p>Caution 2: need to consider therad-safe</p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>

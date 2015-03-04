@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Michelangelo | My Octopress Blog]]></title>
+  <link href="http://IamAlchemist.github.io/blog/categories/michelangelo/atom.xml" rel="self"/>
+  <link href="http://IamAlchemist.github.io/"/>
+  <updated>2015-03-04T15:12:03+08:00</updated>
+  <id>http://IamAlchemist.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ways to Browse Assets]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets/"/>
+    <updated>2015-03-04T10:48:44+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets</id>
+    <content type="html"><![CDATA[<h2>学习了六种浏览“资源”的方式</h2>
+
+<ul>
+<li>WizNote Way,依赖<font color='red'><strong>树状的书签</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/WizNote-way.png"></p>
+
+<ul>
+<li>App Store Way,依赖<font color='red'><strong>排行榜和分类</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/AppStore-way.png"></p>
+
+<ul>
+<li>TMall Way,在特定结果集内利用<font color='red'><strong>动态属性</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/Tmall-way.png"></p>
+
+<ul>
+<li>Unity Way,依赖<font color='red'><strong>分类</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/Unity-way.png"></p>
+
+<ul>
+<li>Google Way,依赖<font color='red'><strong>关键字</strong></font>搜索和<font color='red'><strong>固定属性</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/Google-way.png"></p>
+
+<ul>
+<li>Twitter Way,依赖<font color='red'><strong>社会关系</strong></font>和<font color='red'><strong>时间</strong></font>来组织资源</li>
+</ul>
+
+
+<p><img class="center" src="/images/waysToBrowse/Twitter-way.png"></p>
+
+<h2>假设中的用户体验过程</h2>
+
+<h2>抽象概念</h2>
+
+<h2>Michelangelo的浏览过程</h2>
+]]></content>
+  </entry>
+  
+</feed>

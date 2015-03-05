@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-04T15:12:03+08:00</updated>
+  <updated>2015-03-05T14:52:43+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Ways to Browse Assets]]></title>
+    <title type="html"><![CDATA[Ways to browse assets]]></title>
     <link href="http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets/"/>
     <updated>2015-03-04T10:48:44+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets</id>
@@ -150,7 +150,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>
+    <title type="html"><![CDATA[how to package the .so lib in Android Studio]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/"/>
     <updated>2014-11-24T11:09:59+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio</id>
@@ -166,7 +166,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[What's Cookie]]></title>
+    <title type="html"><![CDATA[what's cookie]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/18/whats-cookie/"/>
     <updated>2014-11-18T10:45:25+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/18/whats-cookie</id>
@@ -203,7 +203,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Lock the Screen in Mac]]></title>
+    <title type="html"><![CDATA[how to lock the screen in Mac]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac/"/>
     <updated>2014-10-30T16:46:20+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac</id>
@@ -238,7 +238,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[A Glance at App Design Pattern]]></title>
+    <title type="html"><![CDATA[A glance at App Design Pattern]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern/"/>
     <updated>2014-10-24T18:09:53+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern</id>
@@ -265,7 +265,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Markdown Syntax]]></title>
+    <title type="html"><![CDATA[markdown syntax]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax/"/>
     <updated>2014-09-29T22:35:48+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax</id>
@@ -308,7 +308,7 @@ this is a H2
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Publish the Blog]]></title>
+    <title type="html"><![CDATA[How to publish the blog]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog/"/>
     <updated>2014-09-29T21:37:35+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog</id>

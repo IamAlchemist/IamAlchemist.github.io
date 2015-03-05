@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Others | My Octopress Blog]]></title>
+  <title><![CDATA[Category: others | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/others/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-04T15:12:03+08:00</updated>
+  <updated>2015-03-05T14:52:43+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Markdown Syntax]]></title>
+    <title type="html"><![CDATA[markdown syntax]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax/"/>
     <updated>2014-09-29T22:35:48+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax</id>

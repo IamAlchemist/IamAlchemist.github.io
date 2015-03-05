@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Michelangelo | My Octopress Blog]]></title>
+  <title><![CDATA[Category: michelangelo | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/michelangelo/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-04T15:12:03+08:00</updated>
+  <updated>2015-03-05T14:52:43+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Ways to Browse Assets]]></title>
+    <title type="html"><![CDATA[Ways to browse assets]]></title>
     <link href="http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets/"/>
     <updated>2015-03-04T10:48:44+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets</id>

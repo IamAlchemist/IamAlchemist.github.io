@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Development | My Octopress Blog]]></title>
+  <title><![CDATA[Category: development | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/development/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-04T15:12:03+08:00</updated>
+  <updated>2015-03-05T14:52:43+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -93,7 +93,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>
+    <title type="html"><![CDATA[how to package the .so lib in Android Studio]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/"/>
     <updated>2014-11-24T11:09:59+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio</id>

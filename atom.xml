@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-05T14:52:43+08:00</updated>
+  <updated>2015-05-04T14:03:50+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,76 +14,25 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Ways to browse assets]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets/"/>
-    <updated>2015-03-04T10:48:44+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2015/03/04/ways-to-browse-assets</id>
-    <content type="html"><![CDATA[<h2>学习了六种浏览“资源”的方式</h2>
-
-<ul>
-<li>WizNote Way,依赖<font color='red'><strong>树状的书签</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/WizNote-way.png"></p>
-
-<ul>
-<li>App Store Way,依赖<font color='red'><strong>排行榜和分类</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/AppStore-way.png"></p>
-
-<ul>
-<li>TMall Way,在特定结果集内利用<font color='red'><strong>动态属性</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/Tmall-way.png"></p>
-
-<ul>
-<li>Unity Way,依赖<font color='red'><strong>分类</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/Unity-way.png"></p>
-
-<ul>
-<li>Google Way,依赖<font color='red'><strong>关键字</strong></font>搜索和<font color='red'><strong>固定属性</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/Google-way.png"></p>
-
-<ul>
-<li>Twitter Way,依赖<font color='red'><strong>社会关系</strong></font>和<font color='red'><strong>时间</strong></font>来组织资源</li>
-</ul>
-
-
-<p><img class="center" src="http://IamAlchemist.github.io/images/waysToBrowse/Twitter-way.png"></p>
-
-<h2>假设中的用户体验过程</h2>
-
-<h2>抽象概念</h2>
-
-<h2>Michelangelo的浏览过程</h2>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Process in Android]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/25/process-in-android/"/>
     <updated>2014-11-25T10:24:54+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/25/process-in-android</id>
     <content type="html"><![CDATA[<p>there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support &ldquo;android:process&rdquo;.</p>
 
+<!--more-->
+
+
 <p>one App can have multi-processes via &ldquo;android:process&rdquo;, and multi apps can share one process via share the same Linux user ID and signed with the same</p>
 
 <h3>Process lifecycle</h3>
 
 <ul>
-<li><p>Foreground process
-A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
+<li>Foreground process</li>
+</ul>
+
+
+<p>A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
 
 <blockquote><p>It hosts an Activity that the user is interacting with (the Activity&rsquo;s onResume() method has been called).</p>
 
@@ -93,8 +42,10 @@ A process that is required for what the user is currently doing. A process is co
 
 <p>It hosts a Service that&rsquo;s executing one of its lifecycle callbacks (onCreate(), onStart(), or onDestroy()).</p>
 
-<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote></li>
-<li><p>Visible Process</p></li>
+<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote>
+
+<ul>
+<li>Visible Process</li>
 </ul>
 
 
@@ -150,7 +101,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[how to package the .so lib in Android Studio]]></title>
+    <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/"/>
     <updated>2014-11-24T11:09:59+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio</id>
@@ -166,25 +117,27 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[what's cookie]]></title>
+    <title type="html"><![CDATA[What's Cookie]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/18/whats-cookie/"/>
     <updated>2014-11-18T10:45:25+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/18/whats-cookie</id>
-    <content type="html"><![CDATA[<h3>Cookie使用的典型场景</h3>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<h3>Cookie使用的典型场景</h3>
 
 <ul>
 <li>使用用户名和口令，通过 SSL 登录</li>
 <li>在服务器的数据库里检查用户名和口令。如果登录成功，建立一个当前时间标签的消息摘要 (比如 MD5) ，并把它保存在cookie和服务器数据库里。把用户的登录时间保存在服务器数据库里面的用户记录里</li>
 <li>在进行每个安全事务时（用户处于登录状态的任何事务），把cookie的消息摘要和保存在服务器数据库里的摘要进行比较，如果比较失败，就把用户引导到登录界面</li>
 <li>如果第3步检查通过，那么检查当前时间和登录时间之音经过的时间是否超过允许的时间长度。如果用户已经超时，那么就把用户引到登录界面。</li>
-<li>如果第3步和第4步都通过了，那么把登录时间重新设置成当前时间，允许事务发生。</li>
-</ul>
-
+<li>如果第3步和第4步都通过了，那么把登录时间重新设置成当前时间，允许事务发生。
 
 <h3>Cookie Sample</h3>
 
-<pre><code>name=&lt;value&gt;[; expires=&lt;date&gt;][; domain=&lt;domain&gt;][; path=&lt;path&gt;][; secure]
-</code></pre>
+<p>  name=<value>[; expires=<date>][; domain=<domain>][; path=<path>][; secure]</p></li>
+</ul>
+
 
 <h3>Cookie的构成</h3>
 
@@ -203,11 +156,17 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[how to lock the screen in Mac]]></title>
+    <title type="html"><![CDATA[How to Lock the Screen in Mac]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac/"/>
     <updated>2014-10-30T16:46:20+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac</id>
-    <content type="html"><![CDATA[<ul>
+    <content type="html"><![CDATA[<pre><code>    '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
+</code></pre>
+
+<!--more-->
+
+
+<ul>
 <li>use &ldquo;Automator&rdquo; create a service, then set the input as &ldquo;no input&rdquo;.</li>
 <li><p>drag &ldquo;Run shell script&rdquo; to the editor in right side, then</p>
 
@@ -226,6 +185,16 @@ A process that doesn&rsquo;t hold any active application components. The only re
     <updated>2014-10-27T14:20:29+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app</id>
     <content type="html"><![CDATA[<ul>
+<li>Key objects in a single-window app</li>
+<li>Key objects in a multi-window app</li>
+<li>Windows and menus displayed by apps &amp; the system</li>
+</ul>
+
+
+<!--more-->
+
+
+<ul>
 <li><p>Key objects in a single-window app
 <img src="http://IamAlchemist.github.io/images/single-window-app.png"></p></li>
 <li><p>Key objects in a multi-window app
@@ -238,11 +207,14 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[A glance at App Design Pattern]]></title>
+    <title type="html"><![CDATA[A Glance at App Design Pattern]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern/"/>
     <updated>2014-10-24T18:09:53+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern</id>
-    <content type="html"><![CDATA[<ul>
+    <content type="html"><![CDATA[<!--more-->
+
+
+<ul>
 <li><p>Model-View-Controller
 <img src="http://IamAlchemist.github.io/images/model_view_controller.png"></p></li>
 <li><p>Delegation: Action on Behalf of Another Object
@@ -265,7 +237,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[markdown syntax]]></title>
+    <title type="html"><![CDATA[Markdown Syntax]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax/"/>
     <updated>2014-09-29T22:35:48+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax</id>
@@ -308,7 +280,7 @@ this is a H2
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to publish the blog]]></title>
+    <title type="html"><![CDATA[How to Publish the Blog]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog/"/>
     <updated>2014-09-29T21:37:35+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog</id>

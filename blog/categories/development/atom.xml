@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: development | My Octopress Blog]]></title>
+  <title><![CDATA[Category: Development | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/development/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-03-05T14:52:43+08:00</updated>
+  <updated>2015-05-04T14:03:50+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -20,13 +20,19 @@
     <id>http://IamAlchemist.github.io/blog/2014/11/25/process-in-android</id>
     <content type="html"><![CDATA[<p>there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support &ldquo;android:process&rdquo;.</p>
 
+<!--more-->
+
+
 <p>one App can have multi-processes via &ldquo;android:process&rdquo;, and multi apps can share one process via share the same Linux user ID and signed with the same</p>
 
 <h3>Process lifecycle</h3>
 
 <ul>
-<li><p>Foreground process
-A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
+<li>Foreground process</li>
+</ul>
+
+
+<p>A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:</p>
 
 <blockquote><p>It hosts an Activity that the user is interacting with (the Activity&rsquo;s onResume() method has been called).</p>
 
@@ -36,8 +42,10 @@ A process that is required for what the user is currently doing. A process is co
 
 <p>It hosts a Service that&rsquo;s executing one of its lifecycle callbacks (onCreate(), onStart(), or onDestroy()).</p>
 
-<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote></li>
-<li><p>Visible Process</p></li>
+<p>It hosts a BroadcastReceiver that&rsquo;s executing its onReceive() method.</p></blockquote>
+
+<ul>
+<li>Visible Process</li>
 </ul>
 
 
@@ -93,7 +101,7 @@ A process that doesn&rsquo;t hold any active application components. The only re
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[how to package the .so lib in Android Studio]]></title>
+    <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>
     <link href="http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/"/>
     <updated>2014-11-24T11:09:59+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio</id>

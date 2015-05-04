@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-05-04T14:03:50+08:00</updated>
+  <updated>2015-05-04T20:54:49+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android Performance Patther: 1]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/"/>
+    <updated>2015-05-04T20:32:24+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1</id>
+    <content type="html"><![CDATA[<h3>android studio can trace the general memory usage by <em>Memory Moniter</em></h3>
+
+<!--more-->
+
+
+<p>android studio can trace the general memory usage by <em>Memory Moniter</em><br/>
+<img class="center" src="/images/android_performace/memory_moniter.jpg" width="500"></p>
+
+<p>watch the video <a href="https://www.youtube.com/watch?v=7ls28uGMBEs&amp;list=PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE&amp;index=36">here</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Process in Android]]></title>

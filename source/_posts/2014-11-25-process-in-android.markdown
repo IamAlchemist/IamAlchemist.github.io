@@ -7,12 +7,14 @@ categories: Android Development
 ---
 
 there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support "android:process".
+<!--more-->
 
 one App can have multi-processes via "android:process", and multi apps can share one process via share the same Linux user ID and signed with the same
 
 ###Process lifecycle
 
 * Foreground process
+
 A process that is required for what the user is currently doing. A process is considered to be in the foreground if any of the following conditions are true:
 
   > It hosts an Activity that the user is interacting with (the Activity's onResume() method has been called).

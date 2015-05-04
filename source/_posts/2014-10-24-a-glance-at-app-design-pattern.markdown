@@ -5,7 +5,7 @@ date: 2014-10-24 18:09:53 +0800
 comments: true
 categories: 
 ---
-
+<!--more-->
 * Model-View-Controller
 {% img /images/model_view_controller.png %}
 

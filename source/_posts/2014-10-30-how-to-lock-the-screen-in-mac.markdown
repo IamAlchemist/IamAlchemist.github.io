@@ -5,6 +5,10 @@ date: 2014-10-30 16:46:20 +0800
 comments: true
 categories: 
 ---
+    
+        '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
+        
+<!--more-->
 
 * use "Automator" create a service, then set the input as "no input".
 * drag "Run shell script" to the editor in right side, then

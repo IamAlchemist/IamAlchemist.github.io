@@ -5,11 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Android Performance 1: Memory Monitor - My Octopress Blog</title>
+  <title>Android Preformace 2: Detect Memory Leak - My Octopress Blog</title>
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="android studio can trace the general memory usage by Memory Moniter android studio can trace the general memory usage by Memory Moniter watch the &hellip;">
+  <meta name="description" content="the common way to detect memory leak use Heap tool and Allocation tracing
+start a empty activity
+jump to the activity in question
+trigger gc
+watch &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1">
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -82,7 +86,7 @@
   <header>
     
       
-        <h1 class="entry-title">Android Performance 1: Memory Monitor</h1>
+        <h1 class="entry-title">Android Preformace 2: Detect Memory Leak</h1>
       
     
     
@@ -92,7 +96,7 @@
 
 
 
-<time class='entry-date' datetime='2015-05-04T20:32:24+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:32 pm</span></time>
+<time class='entry-date' datetime='2015-05-05T20:42:43+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
         
         
       </p>
@@ -100,15 +104,21 @@
   </header>
 
 
-<div class="entry-content"><h3>android studio can trace the general memory usage by <em>Memory Moniter</em></h3>
+<div class="entry-content"><h3>the common way to detect memory leak</h3>
 
 <!--more-->
 
 
-<p>android studio can trace the general memory usage by <em>Memory Moniter</em><br/>
-<img class="center" src="/images/android_performace/memory_moniter.jpg" width="500"></p>
+<ul>
+<li>use Heap tool and Allocation tracing</li>
+<li>start a empty activity</li>
+<li>jump to the activity in question</li>
+<li>trigger gc</li>
+<li>watch the heap</li>
+</ul>
 
-<p>watch the video <a href="https://www.youtube.com/watch?v=7ls28uGMBEs&amp;list=PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE&amp;index=36">here</a></p>
+
+<p><img class="center" src="/images/android_performace/memory_leak_detection.png" width="600"></p>
 </div>
 
 
@@ -131,7 +141,7 @@
 
 
 
-<time class='entry-date' datetime='2015-05-04T20:32:24+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:32 pm</span></time>
+<time class='entry-date' datetime='2015-05-05T20:42:43+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
       
       
 
@@ -146,7 +156,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/" >Tweet</a>
   
   
   
@@ -155,10 +165,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/11/25/process-in-android/" title="Previous Post: Process in Android">&laquo; Process in Android</a>
+        <a class="basic-alignment left" href="/blog/2015/05/04/android-performance-patther-1/" title="Previous Post: android performance 1: Memory monitor">&laquo; android performance 1: Memory monitor</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/05/05/android-preformace-2-detect-memory-leak/" title="Next Post: android preformace 2: detect memory leak">android preformace 2: detect memory leak &raquo;</a>
       
     </p>
   </footer>

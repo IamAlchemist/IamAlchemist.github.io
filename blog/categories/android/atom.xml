@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-05-04T20:54:49+08:00</updated>
+  <updated>2015-05-05T20:52:49+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,7 +14,30 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Android Performance Patther: 1]]></title>
+    <title type="html"><![CDATA[Android Preformace 2: Detect Memory Leak]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/"/>
+    <updated>2015-05-05T20:42:43+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak</id>
+    <content type="html"><![CDATA[<h3>the common way to detect memory leak</h3>
+
+<!--more-->
+
+
+<ul>
+<li>use Heap tool and Allocation tracing</li>
+<li>start a empty activity</li>
+<li>jump to the activity in question</li>
+<li>trigger gc</li>
+<li>watch the heap</li>
+</ul>
+
+
+<p><img class="center" src="/images/android_performace/memory_leak_detection.png" width="600"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android Performance 1: Memory Monitor]]></title>
     <link href="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/"/>
     <updated>2015-05-04T20:32:24+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1</id>

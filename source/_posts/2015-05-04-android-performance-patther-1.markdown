@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "android performance patther: 1"
+title: "android performance 1: Memory monitor"
 date: 2015-05-04 20:32:24 +0800
 comments: true
 categories: android

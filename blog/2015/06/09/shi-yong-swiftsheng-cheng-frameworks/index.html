@@ -5,15 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Android Preformace 2: Detect Memory Leak - My Octopress Blog</title>
+  <title>使用swift生成Frameworks - My Octopress Blog</title>
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="the common way to detect memory leak use Heap tool and Allocation tracing
-start a empty activity
-jump to the activity in question
-trigger gc
-watch &hellip;">
+  <meta name="description" content="制作Dynamically Linked Frameworks 一个普通的Swift file class SwiftFrameworks { init() { println("Class init") } func doSomething() { println("Yeah, it works &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +18,7 @@ watch &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak">
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -86,7 +82,7 @@ watch &hellip;">
   <header>
     
       
-        <h1 class="entry-title">Android Preformace 2: Detect Memory Leak</h1>
+        <h1 class="entry-title">使用swift生成Frameworks</h1>
       
     
     
@@ -96,7 +92,7 @@ watch &hellip;">
 
 
 
-<time class='entry-date' datetime='2015-05-05T20:42:43+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
+<time class='entry-date' datetime='2015-06-09T19:04:02+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:04 pm</span></time>
         
         
       </p>
@@ -104,21 +100,55 @@ watch &hellip;">
   </header>
 
 
-<div class="entry-content"><h3>the common way to detect memory leak</h3>
+<div class="entry-content"><h3>制作Dynamically Linked Frameworks</h3>
 
 <!--more-->
 
 
-<ul>
-<li>use Heap tool and Allocation tracing</li>
-<li>start a empty activity</li>
-<li>jump to the activity in question</li>
-<li>trigger gc</li>
-<li>watch the heap</li>
-</ul>
+<h3>一个普通的Swift file</h3>
 
+<pre><code>class SwiftFrameworks {
+    init() { println("Class init") }
+    func doSomething() { println("Yeah, it works") }
+} 
+</code></pre>
 
-<p><img class="center" src="/images/android_performace/memory_leak_detection.png" width="600"></p>
+<p>为了让它可以在framework中工作，需要让所有类和方法都是<em>public</em>的</p>
+
+<pre><code>public class SwiftFrameworks { 
+    public init() { println("Class init") } 
+    public func doSomething() { println("Yeah, it works") } 
+} 
+</code></pre>
+
+<h3>建立framework工程</h3>
+
+<p><img class="center" src="/images/iOS/2015-06-09_1.png" width="600"></p>
+
+<h3>添加刚才的swift文件</h3>
+
+<p><img class="center" src="/images/iOS/2015-06-09_4.png" width="600"></p>
+
+<h3>编译</h3>
+
+<p>有时候编译时候并不能产生target，切换一下设备（可能是xcode的bug），然后找到build好的target所在文件夹</p>
+
+<p><img class="center" src="/images/iOS/2015-06-09_2.png" width="600"></p>
+
+<h3>添加到测试工程中</h3>
+
+<p>把编译好的framework拖拽到测试工程中，之后在embed中添加该framework</p>
+
+<p><img class="center" src="/images/iOS/2015-06-09_3.png" width="600"></p>
+
+<p>然后</p>
+
+<pre><code>import SwiftFramework
+let swiftFramework = SwiftFramework()
+swiftFramework.helloWorld()
+</code></pre>
+
+<p>大功告成～</p>
 </div>
 
 
@@ -141,13 +171,13 @@ watch &hellip;">
 
 
 
-<time class='entry-date' datetime='2015-05-05T20:42:43+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
+<time class='entry-date' datetime='2015-06-09T19:04:02+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:04 pm</span></time>
       
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/android/'>android</a>
+    <a class='category' href='/blog/categories/ios/'>ios</a>
   
 </span>
 
@@ -156,7 +186,7 @@ watch &hellip;">
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/" >Tweet</a>
   
   
   
@@ -165,10 +195,8 @@ watch &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/05/04/android-performance-patther-1/" title="Previous Post: android performance 1: Memory monitor">&laquo; android performance 1: Memory monitor</a>
+        <a class="basic-alignment left" href="/blog/2015/05/06/memory-churn/" title="Previous Post: memory churn">&laquo; memory churn</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/05/06/memory-churn/" title="Next Post: memory churn">memory churn &raquo;</a>
       
     </p>
   </footer>

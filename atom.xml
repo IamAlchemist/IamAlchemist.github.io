@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-06-12T15:29:58+08:00</updated>
+  <updated>2015-06-12T15:54:04+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,40 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Swift中optional]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/"/>
+    <updated>2015-06-12T15:37:14+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/06/12/swift-optional</id>
+    <content type="html"><![CDATA[<p>关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是optional的目的</p>
+
+<!--more-->
+
+
+<p>关于optional，剩下的只是swift里面有关的特殊术语，搞清楚还是很有必要的</p>
+
+<h4>Force Unwrapping</h4>
+
+<p>Force Unwarpping指的是把optional对象转化成一个非空的对象</p>
+
+<h4>Optional Binding</h4>
+
+<p>其基本形式是</p>
+
+<pre><code>if let constantName = someOptional
+
+while let constantName = someOptional
+</code></pre>
+
+<h4>Implicity Unwrapped Optionals</h4>
+
+<p>一个optinal变量可以定义为<code>implicity unwrapped optionals</code>, 那么使用这个变量的时候就不再需要force unwrap, 一旦unwrap失败，程序会崩溃</p>
+
+<pre><code>var storyboardName : String! = "hello"
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swift中的类型转换]]></title>

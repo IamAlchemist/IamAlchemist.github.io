@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Ios | My Octopress Blog]]></title>
-  <link href="http://IamAlchemist.github.io/blog/categories/ios/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Swift | My Octopress Blog]]></title>
+  <link href="http://IamAlchemist.github.io/blog/categories/swift/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
   <updated>2015-06-12T15:29:58+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
@@ -158,63 +158,6 @@ for thing in things{
 </code></pre>
 
 <p>需要指出，在switch的case语句中，使用的<code>as</code>是强制转换版的，并不写作<code>as?</code>或者<code>as!</code>，在case语句中使用这种检查总是安全的。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用swift生成Frameworks]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/"/>
-    <updated>2015-06-09T19:04:02+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks</id>
-    <content type="html"><![CDATA[<h3>制作Dynamically Linked Frameworks</h3>
-
-<!--more-->
-
-
-<h3>一个普通的Swift file</h3>
-
-<pre><code>class SwiftFrameworks {
-    init() { println("Class init") }
-    func doSomething() { println("Yeah, it works") }
-} 
-</code></pre>
-
-<p>为了让它可以在framework中工作，需要让所有类和方法都是<em>public</em>的</p>
-
-<pre><code>public class SwiftFrameworks { 
-    public init() { println("Class init") } 
-    public func doSomething() { println("Yeah, it works") } 
-} 
-</code></pre>
-
-<h3>建立framework工程</h3>
-
-<p><img class="center" src="/images/iOS/2015-06-09_1.png" width="600"></p>
-
-<h3>添加刚才的swift文件</h3>
-
-<p><img class="center" src="/images/iOS/2015-06-09_4.png" width="600"></p>
-
-<h3>编译</h3>
-
-<p>有时候编译时候并不能产生target，切换一下设备（可能是xcode的bug），然后找到build好的target所在文件夹</p>
-
-<p><img class="center" src="/images/iOS/2015-06-09_2.png" width="600"></p>
-
-<h3>添加到测试工程中</h3>
-
-<p>把编译好的framework拖拽到测试工程中，之后在embed中添加该framework</p>
-
-<p><img class="center" src="/images/iOS/2015-06-09_3.png" width="600"></p>
-
-<p>然后</p>
-
-<pre><code>import SwiftFramework
-let swiftFramework = SwiftFramework()
-swiftFramework.helloWorld()
-</code></pre>
-
-<p>大功告成～</p>
 ]]></content>
   </entry>
   

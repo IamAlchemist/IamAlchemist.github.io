@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Swift中optional - My Octopress Blog</title>
+  <title>Swift Extension - My Octopress Blog</title>
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了， &hellip;">
+  <meta name="description" content="extensions可以给已有的type增加功能，而且不必访问源代码(retroactive modeling) extensions可以
+* 增加computed property和computed static property
+* 定义instance methods和type &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional">
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/17/swift-extension">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -82,7 +84,7 @@
   <header>
     
       
-        <h1 class="entry-title">Swift中optional</h1>
+        <h1 class="entry-title">Swift Extension</h1>
       
     
     
@@ -92,7 +94,7 @@
 
 
 
-<time class='entry-date' datetime='2015-06-12T15:37:14+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:37 pm</span></time>
+<time class='entry-date' datetime='2015-06-17T07:45:07+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:45 am</span></time>
         
         
       </p>
@@ -100,31 +102,120 @@
   </header>
 
 
-<div class="entry-content"><p>关于<code>optional</code>，最需要说的是为什么需要<code>optional</code>，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是<code>optional</code>的目的</p>
+<div class="entry-content"><p><code>extensions</code>可以给已有的type增加功能，而且不必访问源代码(<code>retroactive modeling</code>)</p>
+
+<p><code>extensions</code>可以
+* 增加<code>computed property</code>和<code>computed static property</code>
+* 定义<code>instance methods</code>和<code>type methods</code>
+* 提供新的<code>initializers</code>
+* 定义<code>subscripts</code>
+* 定义和使用新的<code>nested types</code>
+* 为一个<code>type</code>实现一个<code>protocol</code></p>
+
+<p><code>extension</code>不可以
+* <code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code>
+* <code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code>
+* <code>extension</code>不能增加新的<code>designated initializer</code></p>
 
 <!--more-->
 
 
-<p>关于<code>optional</code>，剩下的只是swift里面有关的特殊术语，搞清楚还是很有必要的</p>
+<h4>Extension 语法</h4>
 
-<h4>Force Unwrapping</h4>
+<pre><code>extension SomeType {
+    ...
+}
 
-<p><code>Force Unwarpping</code>指的是把<code>optional</code>对象转化成一个非空的对象</p>
-
-<h4>Optional Binding</h4>
-
-<p>其基本形式是</p>
-
-<pre><code>if let constantName = someOptional
-
-while let constantName = someOptional
+extiosion SomeType: Someprotocol, AnotherProtocol {
+    ...
+}
 </code></pre>
 
-<h4>Implicity Unwrapped Optionals</h4>
+<p>一个有趣的例子</p>
 
-<p>一个optinal变量可以定义为<code>implicity unwrapped optionals</code>, 那么使用这个变量的时候就不再需要force unwrap, 一旦unwrap失败，程序会崩溃</p>
+<pre><code>extension Double {
+    var km: Double { return self * 1000.0 }
+    var m: Double { return self }
+}
 
-<pre><code>var storyboardName : String! = "hello"
+let aMarathon = 42.m + 195.m
+println("A marathon is \(aMarathon) masters long")
+</code></pre>
+
+<h4>Initializers</h4>
+
+<pre><code>struct Size { var width = 0.0, height = 0.0 }
+struct Point { var x = 0.0, y = 0.0 }
+struct Rect {
+    var origin = Point()
+    var size = Size()
+}
+
+extension Rect{
+    init(center: Point, size: Size){
+        let originX = center.x - (size.width / 2)
+        let originY = center.y - (size.height / 2)
+        self.init(origin: Point(x:originX, y:originY), size: size)
+    }
+}
+</code></pre>
+
+<h4>Methods</h4>
+
+<pre><code>extension Int{
+    func repetitions(task: ()-&gt; ()){
+        for i in 0..&lt;self {
+            task()
+        }
+    }
+}
+
+3.repetitions{ println("hello") }
+</code></pre>
+
+<h4>Mutating Instance Methods</h4>
+
+<pre><code>extension Int {
+    mutating func square(){
+        self = self * self
+    }
+}
+
+var someInt = 3.square()
+</code></pre>
+
+<h4>Subscripts</h4>
+
+<pre><code>extension Int {
+    subscript(var digitIndex: Int) -&gt; Int{
+        var decimalBase = 1
+        while digitIndex &gt; 0 {
+            decimalBase *= 10
+            --digitIndex
+        }
+
+        return (self / decimalBase) % 10
+    }
+}
+
+74631295[1] //return 9
+</code></pre>
+
+<h4>Nested Tyeps</h4>
+
+<pre><code>extension Int {
+    enum Kind {
+        case Negative, Zero, Positive
+    }
+
+    var kind: Kind {
+        switch self {
+        case 0: retrun .Zero
+        case let x where x &gt; 0: return .Positive
+        default: return .Negative
+        }
+    }
+}
 </code></pre>
 </div>
 
@@ -148,7 +239,7 @@ while let constantName = someOptional
 
 
 
-<time class='entry-date' datetime='2015-06-12T15:37:14+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:37 pm</span></time>
+<time class='entry-date' datetime='2015-06-17T07:45:07+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:45 am</span></time>
       
       
 
@@ -163,7 +254,7 @@ while let constantName = someOptional
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/17/swift-extension/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/17/swift-extension/" >Tweet</a>
   
   
   
@@ -172,10 +263,10 @@ while let constantName = someOptional
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/06/11/typecastinginswift/" title="Previous Post: Swift中的类型转换">&laquo; Swift中的类型转换</a>
+        <a class="basic-alignment left" href="/blog/2015/06/12/swift-optional/" title="Previous Post: swift中optional">&laquo; swift中optional</a>
       
       
-        <a class="basic-alignment right" href="/blog/2015/06/17/swift-extension/" title="Next Post: swift extension">swift extension &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2015/06/17/swift-optional-chaining/" title="Next Post: Swift Optional Chaining">Swift Optional Chaining &raquo;</a>
       
     </p>
   </footer>

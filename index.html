@@ -9,7 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了， &hellip;">
+  <meta name="description" content="swift method分为instance method和type method instance method是属于实例的函数，type mothod则是属于type的函数 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +84,126 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/06/17/swift-method/">Swift Method</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-17T12:42:28+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:42 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>swift <code>method</code>分为<code>instance method</code>和<code>type method</code></p>
+
+<p><code>instance method</code>是属于实例的函数，<code>type mothod</code>则是属于<code>type</code>的函数</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/17/swift-method/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/17/swift-optional-chaining/">Swift Optional Chaining</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-17T09:19:59+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:19 am</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>optinal chainging</code>是一个查询和调用<code>optional</code>的property, method, subscript的过程。如果其中的<code>optional</code>没有nil，那么表达式求值成功。否则，失败。失败后返回nil。所以整个表达式返回值始终是<code>optional</code>类型。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/17/swift-optional-chaining/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/17/swift-extension/">Swift Extension</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-17T07:45:07+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:45 am</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>extensions</code>可以给已有的type增加功能，而且不必访问源代码(<code>retroactive modeling</code>)</p>
+
+<p><code>extensions</code>可以
+* 增加<code>computed property</code>和<code>computed static property</code>
+* 定义<code>instance methods</code>和<code>type methods</code>
+* 提供新的<code>initializers</code>
+* 定义<code>subscripts</code>
+* 定义和使用新的<code>nested types</code>
+* 为一个<code>type</code>实现一个<code>protocol</code></p>
+
+<p><code>extension</code>不可以
+* <code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code>
+* <code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code>
+* <code>extension</code>不能增加新的<code>designated initializer</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/17/swift-extension/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/06/12/swift-optional/">Swift中optional</a></h1>
     
     
@@ -101,7 +221,7 @@
   </header>
 
 
-  <div class="entry-content"><p>关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是optional的目的</p>
+  <div class="entry-content"><p>关于<code>optional</code>，最需要说的是为什么需要<code>optional</code>，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是<code>optional</code>的目的</p>
 
 </div>
   
@@ -315,111 +435,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/05/04/android-performance-patther-1/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/25/process-in-android/">Process in Android</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-25T10:24:54+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 am</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>there are four types of components for an App, <activity>, <service>, <receiver> and <provider>, which support &ldquo;android:process&rdquo;.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/25/process-in-android/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/">How to Package the .so Lib in Android Studio</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-24T11:09:59+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:09 am</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>change build.Gradle like this:</p>
-
-<pre><code>sourceSets {  
-    main {  
-        jniLibs.srcDirs = ['libs']  
-    }  
-}   
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/18/whats-cookie/">What&#8217;s Cookie</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-18T10:45:25+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:45 am</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"></div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/18/whats-cookie/">Read on &rarr;</a>
     </footer>
   
 

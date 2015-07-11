@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Swift中optional - My Octopress Blog</title>
+  <title>Swift Method - My Octopress Blog</title>
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了， &hellip;">
+  <meta name="description" content="swift method分为instance method和type method instance method是属于实例的函数，type mothod则是属于type的函数 Local and External Parameter Names for Method local and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional">
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/17/swift-method">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -82,7 +82,7 @@
   <header>
     
       
-        <h1 class="entry-title">Swift中optional</h1>
+        <h1 class="entry-title">Swift Method</h1>
       
     
     
@@ -92,7 +92,7 @@
 
 
 
-<time class='entry-date' datetime='2015-06-12T15:37:14+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:37 pm</span></time>
+<time class='entry-date' datetime='2015-06-17T12:42:28+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:42 pm</span></time>
         
         
       </p>
@@ -100,32 +100,90 @@
   </header>
 
 
-<div class="entry-content"><p>关于<code>optional</code>，最需要说的是为什么需要<code>optional</code>，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是<code>optional</code>的目的</p>
+<div class="entry-content"><p>swift <code>method</code>分为<code>instance method</code>和<code>type method</code></p>
+
+<p><code>instance method</code>是属于实例的函数，<code>type mothod</code>则是属于<code>type</code>的函数</p>
 
 <!--more-->
 
 
-<p>关于<code>optional</code>，剩下的只是swift里面有关的特殊术语，搞清楚还是很有必要的</p>
+<h3>Local and External Parameter Names for Method</h3>
 
-<h4>Force Unwrapping</h4>
+<p><code>local and external parameter name</code>的默认行为并不等同于<code>function</code></p>
 
-<p><code>Force Unwarpping</code>指的是把<code>optional</code>对象转化成一个非空的对象</p>
+<p>swift的method的参数名字非常像objective－c。比如说，一般来说，swift的method的名字带有by， with， for等介词，例如incrementBy。</p>
 
-<h4>Optional Binding</h4>
+<p>需要指出的是，swift默认会给第一个参数local parameter name，但是对于第二个以后参数则默认生成local and external parameter name。
+    class Counter {
+        var count : Int = 0
+        func incrementBy(amount: Int, numberOfTimes: Int){
+            count += amount * numberOfTimes
+        }
+    }
+swift会把amount看作local name，但是会把numberOfTimes看作local and external name。所以调用该method，需要像如下这样
+    let counter = Counter()
+    counter.incrementBy(5, numberOfTimes: 3)
+当然也可以显式的提供第一个参数的external name或者不提供非第一参数的external name
+    class Counter2{
+        var count : Int = 0
+        func incrementBy(#amount: Int, _ numberOfTimes: Int){
+            count += amount * numberOfTimes
+        }
+    }
+    let count2 = Count2()
+    count2.incrementBy(amount: 5, 3)</p>
 
-<p>其基本形式是</p>
+<h3>Self Propety</h3>
 
-<pre><code>if let constantName = someOptional
+<p>一般情况下可以不写，但是如果有歧义就需要写
+    struct Point{
+        var x = 0.0, y = 0.0
+        func isToTheRightOfX(x: Double) -> Bool{
+            return self.x > x   // must use self
+        }
+        func description() -> String{
+            return &ldquo;x: (x), y: (y)&rdquo;) //no need to use self
+        }
+    }</p>
 
-while let constantName = someOptional
+<h3>在instance method内改变值类型变量自身</h3>
+
+<p>对于<code>value types</code>来说，一般情况下，instance method不能更改属性，但是加上mutating关键字来改变这点。
+    struct Point{
+        var x = 0.0, y = 0.0
+        mutating func moveByX(deltaX: Double, y deltaY: Double){
+            x += deltaX
+            y += deltaY
+        }
+    }</p>
+
+<h3>Assigning to self Within a Mutating Method</h3>
+
+<pre><code>struct Point{
+    var x = 0.0, y = 0.0
+    mutating func moveByX(deltaX: Double, y deltaY: Double){
+        self ＝ Point(x: x+deltaX, y: y + deltaY)
+    }
+}
+
+enum TriStateSwitch {
+    case Off, Low, High
+    mutating func next() {
+        switch self {
+        case Off:
+            self = Low
+        case Low:
+            self = High
+        case High:
+            self = Off
+        }
+    }
+}
 </code></pre>
 
-<h4>Implicity Unwrapped Optionals</h4>
+<h3>Type Method</h3>
 
-<p>一个optinal变量可以定义为<code>implicity unwrapped optionals</code>, 那么使用这个变量的时候就不再需要force unwrap, 一旦unwrap失败，程序会崩溃</p>
-
-<pre><code>var storyboardName : String! = "hello"
-</code></pre>
+<p><code>type method</code>在类中使用关键字<code>class</code>来表示，在结构体和枚举中使用<code>static</code>来表示</p>
 </div>
 
 
@@ -148,7 +206,7 @@ while let constantName = someOptional
 
 
 
-<time class='entry-date' datetime='2015-06-12T15:37:14+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:37 pm</span></time>
+<time class='entry-date' datetime='2015-06-17T12:42:28+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:42 pm</span></time>
       
       
 
@@ -163,7 +221,7 @@ while let constantName = someOptional
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/17/swift-method/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/17/swift-method/" >Tweet</a>
   
   
   
@@ -172,10 +230,8 @@ while let constantName = someOptional
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/06/11/typecastinginswift/" title="Previous Post: Swift中的类型转换">&laquo; Swift中的类型转换</a>
+        <a class="basic-alignment left" href="/blog/2015/06/17/swift-optional-chaining/" title="Previous Post: Swift Optional Chaining">&laquo; Swift Optional Chaining</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/06/17/swift-extension/" title="Next Post: swift extension">swift extension &raquo;</a>
       
     </p>
   </footer>

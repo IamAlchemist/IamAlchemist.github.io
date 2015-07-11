@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/swift/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-11T17:40:37+08:00</updated>
+  <updated>2015-07-11T17:55:55+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -102,6 +102,28 @@ enum TriStateSwitch {
 <h3>Type Method</h3>
 
 <p><code>type method</code>在类中使用关键字<code>class</code>来表示，在结构体和枚举中使用<code>static</code>来表示</p>
+
+<p>在<code>type method</code>中，<code>self</code>表示类型本身，而不是实例本身</p>
+
+<pre><code>​struct​ ​LevelTracker​ {
+​    ​static​ ​var​ ​highestUnlockedLevel​ = ​1
+​    ​static​ ​func​ ​unlockLevel​(​level​: ​Int​) {
+​        ​if​ ​level​ &gt; ​highestUnlockedLevel​ { ​highestUnlockedLevel​ = ​level​ }
+​    }
+​    ​static​ ​func​ ​levelIsUnlocked​(​level​: ​Int​) -&gt; ​Bool​ {
+​        ​return​ ​level​ &lt;= ​highestUnlockedLevel
+​    }
+​    ​var​ ​currentLevel​ = ​1
+​    ​mutating​ ​func​ ​advanceToLevel​(​level​: ​Int​) -&gt; ​Bool​ {
+​        ​if​ ​LevelTracker​.​levelIsUnlocked​(​level​) {
+​            ​currentLevel​ = ​level
+​            ​return​ ​true
+​        } ​else​ {
+​            ​return​ ​false
+​        }
+​    }
+​}
+</code></pre>
 ]]></content>
   </entry>
   

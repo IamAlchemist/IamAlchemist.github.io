@@ -81,6 +81,29 @@ swift会把amount看作local name，但是会把numberOfTimes看作local and ext
 	}
 
 ### Type Method
-`type method`在类中使用关键字`class`来表示，在结构体和枚举中使用`static`来表示
+`type method`在类中使用关键字`class`来表示，在结构体和枚举中使用`static`来表示  
+
+在`type method`中，`self`表示类型本身，而不是实例本身
+
+	​struct​ ​LevelTracker​ {
+    ​    ​static​ ​var​ ​highestUnlockedLevel​ = ​1
+	​    ​static​ ​func​ ​unlockLevel​(​level​: ​Int​) {
+	​        ​if​ ​level​ > ​highestUnlockedLevel​ { ​highestUnlockedLevel​ = ​level​ }
+	​    }
+	​    ​static​ ​func​ ​levelIsUnlocked​(​level​: ​Int​) -> ​Bool​ {
+	​        ​return​ ​level​ <= ​highestUnlockedLevel
+	​    }
+	​    ​var​ ​currentLevel​ = ​1
+	​    ​mutating​ ​func​ ​advanceToLevel​(​level​: ​Int​) -> ​Bool​ {
+	​        ​if​ ​LevelTracker​.​levelIsUnlocked​(​level​) {
+	​            ​currentLevel​ = ​level
+	​            ​return​ ​true
+	​        } ​else​ {
+	​            ​return​ ​false
+	​        }
+	​    }
+	​}
+
+
 
 	

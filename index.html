@@ -9,7 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="swift method分为instance method和type method instance method是属于实例的函数，type mothod则是属于type的函数 ">
+  <meta name="description" content="AIDL是用来跨进行通信的。在Android上，跨进程通信需要把对象解构成系统可以识别的基本类型，然后在交给另一个进程使用之前，需要重新组装起来。这些工作是十分枯燥的，AIDL就是为了这个目的而设计的。 注意：当且仅当你允许不同的App的clients需要跨进程来访问你的service， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/12/aidl-in-android/">AIDL in Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-12T13:11:59+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:11 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>AIDL是用来跨进行通信的。在Android上，跨进程通信需要把对象解构成系统可以识别的基本类型，然后在交给另一个进程使用之前，需要重新组装起来。这些工作是十分枯燥的，AIDL就是为了这个目的而设计的。</p>
+
+<p><code>注意：当且仅当你允许不同的App的clients需要跨进程来访问你的service，并且需要在service里处理多线程问题的时候，你才应该使用AIDL。如果仅仅是App内部的client来访问服务，并且不需要IPC的话，只要使用Binder就好了。如果是需要IPC，但是不用处理并发的话，那么只要用Messager就好了。只有既要IPC，又要处理并发，才需要用AIDL。总之，只有在必须的时候才使用AIDL</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/12/aidl-in-android/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -400,41 +437,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/05/05/android-preformace-2-detect-memory-leak/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/04/android-performance-patther-1/">Android Performance 1: Memory Monitor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-05-04T20:32:24+08:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:32 pm</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>android studio can trace the general memory usage by <em>Memory Moniter</em></h3>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/04/android-performance-patther-1/">Read on &rarr;</a>
     </footer>
   
 

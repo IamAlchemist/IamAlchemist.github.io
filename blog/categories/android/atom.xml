@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-11T17:55:55+08:00</updated>
+  <updated>2015-07-13T08:36:28+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,207 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AIDL in Android]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android/"/>
+    <updated>2015-07-12T13:11:59+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android</id>
+    <content type="html"><![CDATA[<p>AIDL是用来跨进行通信的。在Android上，跨进程通信需要把对象解构成系统可以识别的基本类型，然后在交给另一个进程使用之前，需要重新组装起来。这些工作是十分枯燥的，AIDL就是为了这个目的而设计的。</p>
+
+<p><code>注意：当且仅当你允许不同的App的clients需要跨进程来访问你的service，并且需要在service里处理多线程问题的时候，你才应该使用AIDL。如果仅仅是App内部的client来访问服务，并且不需要IPC的话，只要使用Binder就好了。如果是需要IPC，但是不用处理并发的话，那么只要用Messager就好了。只有既要IPC，又要处理并发，才需要用AIDL。总之，只有在必须的时候才使用AIDL</code></p>
+
+<!--more-->
+
+
+<h3>关于AIDL调用的背后</h3>
+
+<p>另一个需要知道的是，AIDL的接口调用是直接调用，所以并不能对调用接口的线程有任何假设。调用的线程在本地进程执行还是在远程进程执行的结果可能是非常不同的。其中：</p>
+
+<ul>
+<li>如果是本地进程进行AIDL调用，服务端代码是在进行调用的这个线程中执行的</li>
+<li>如果是远程进程进行AIDL调用，你就必须为服务端代码同时在不同线程中执行做好准备，也就是说，这些代码必须是线程安全的</li>
+<li><code>oneway</code>关键字用来修饰远调用，使用后表示这个远程调用并不阻塞，它仅仅是发送了数据就立刻返回。而该关键字并不影响本地调用</li>
+</ul>
+
+
+<h3>创建AIDL过程</h3>
+
+<ul>
+<li>创建.aidl文件</li>
+</ul>
+
+
+<p>使用Android Studio自己创建IRemoteService.aidl就很好，比如定义接口getPid()</p>
+
+<pre><code>interface IRemoteService {
+    int getPid();
+}
+</code></pre>
+
+<ul>
+<li>实现该接口的service</li>
+</ul>
+
+
+<p>例如实现文件AIDLService.java，这个service在onBind函数中返回的binder里含有IRemoteService.aidl定义的接口的实现</p>
+
+<pre><code>public class AIDLService extends Service {
+
+    private final IRemoteService.Stub binder = new IRemoteService.Stub(){
+
+        @Override
+        public int getPid() throws RemoteException {
+            return android.os.Process.myPid();
+        }
+    };
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+}
+</code></pre>
+
+<ul>
+<li>使用该AIDL</li>
+</ul>
+
+
+<p>像使用普通service一样</p>
+
+<pre><code>IRemoteService remoteService;
+
+ServiceConnection remoteServiceConnection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        remoteService = IRemoteService.Stub.asInterface(iBinder);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        remoteService = null;
+    }
+};
+
+Intent intent = new Intent(MainActivity.this, AIDLService.class);
+bindService(intent, remoteServiceConnection, BIND_AUTO_CREATE);
+startService(intent);
+
+int remotePid = remoteService.getPid();
+</code></pre>
+
+<h3>在AIDL中传递对象</h3>
+
+<p>比如我们希望AIDL接口可以传递名为Student的对象,需要做以下一些事情</p>
+
+<ul>
+<li>定义Student.aidl</li>
+</ul>
+
+
+<p>其中声明Student类型</p>
+
+<pre><code>parcelable Student;
+</code></pre>
+
+<ul>
+<li>定义aidl接口（IRemoteAPI.aidl）</li>
+</ul>
+
+
+<p>注意要import相应的Student类</p>
+
+<pre><code>import com.morgenworks.alchemistli.remotelibrary.Student;
+
+interface IRemoteAPI {
+    Student getName();
+    void setName(in Student st);
+}
+</code></pre>
+
+<ul>
+<li>定义实现了Parcelble接口的Student类</li>
+</ul>
+
+
+<p>实现Parcelble接口需要实现这样几个函数, Student(Parcel source), writeToParcel(&hellip;), readescribeContents(), 以及static Creator<Student> CREATOR</p>
+
+<pre><code>public class Student implements Parcelable {
+    public String name;
+    public String fatherName;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(fatherName);
+    }
+
+    public Student(Parcel source){
+        name = source.readString();
+        fatherName = source.readString();
+    }
+
+    public Student(){}
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setFatherName(String fatherName){
+        this.fatherName = fatherName;
+    }
+
+    public static final Creator&lt;Student&gt; CREATOR = new Creator&lt;Student&gt;() {
+        @Override
+        public Student createFromParcel(Parcel source) {
+            return new Student(source);
+        }
+
+        @Override
+        public Student[] newArray(int size) {
+            return new Student[size];
+        }
+    };
+}
+</code></pre>
+
+<ul>
+<li>实现AIDL接口的服务</li>
+</ul>
+
+
+<p>就像实现普通的AIDL接口服务一样</p>
+
+<pre><code>public class RemoteAPIService extends Service {
+    private Student stuInfo;
+
+    private IRemoteAPI.Stub binder = new IRemoteAPI.Stub() {
+        @Override
+        public Student getName() throws RemoteException {
+            stuInfo.name = stuInfo.name.toUpperCase();
+            return stuInfo;
+        }
+
+        @Override
+        public void setName(Student st) throws RemoteException {
+            stuInfo = st;
+        }
+    };
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+}
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Memory Churn]]></title>
@@ -146,22 +347,6 @@ A process that doesn&rsquo;t hold any active application components. The only re
 <li><p>Caution 2: need to consider therad-safe</p></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Package the .so Lib in Android Studio]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/"/>
-    <updated>2014-11-24T11:09:59+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio</id>
-    <content type="html"><![CDATA[<p>change build.Gradle like this:</p>
-
-<pre><code>sourceSets {  
-    main {  
-        jniLibs.srcDirs = ['libs']  
-    }  
-}   
-</code></pre>
 ]]></content>
   </entry>
   

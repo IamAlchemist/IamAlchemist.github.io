@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>自定义Container View Controllers - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="多数情况下，container view controller 就像普通的view controller。它管理着view，内容，与其他对象协同工作，并且响应在repsonder chain里的事件。 当你设计一个container的时候，你需要显式的在你的container， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/07/14/creating-custom-container-view-controllers">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">自定义Container View Controllers</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-14T15:14:19+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:14 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>多数情况下，container view controller 就像普通的view controller。它管理着view，内容，与其他对象协同工作，并且响应在repsonder chain里的事件。</p>
+
+<p>当你设计一个container的时候，你需要显式的在你的container，和它的子controller之间创建父子关系。如下图。注意，<code>不仅仅controller之间需要显式的指定关系，view之间的关系也需要显式的指定</code>。</p>
+
+<p><img class="center" src="/images/iOS/2015-07-14_1.png" width="380"></p>
+
+<!--more-->
+
+
+<h3>常见的Container设计的例子</h3>
+
+<h4>Navigation Controller管理着一些由子View Controller组成的栈</h4>
+
+<p>如图所示，Navigation Controller管理着一系列不同的子ViewController。在这个栈最上面的ViewController的View会被显示出来。</p>
+
+<p><img class="center" src="/images/iOS/2015-07-14_2.png" width="669"></p>
+
+<p>Navigation Controller定义了一些行为</p>
+
+<ul>
+<li>topViewController &ndash; 目前显示的vc</li>
+<li>viewControllers &ndash; 所有子vc</li>
+<li>pushViewController:animated: &ndash; 显示</li>
+<li>popViewControllerAnimated: &ndash; 弹出</li>
+<li>delegate &ndash; 可以让使用者当状态改变的时候收到通知</li>
+</ul>
+
+
+<p>Navigation Controller 使用子VC的一些属性来改变当前显示的内容。</p>
+
+<ul>
+<li>navigationItem &ndash; 提供了navigation toolbar的内容</li>
+<li>toolbarItem &ndash; 提供了底部bar的内容</li>
+<li>editButtonItem &ndash; 提供了可以从navigation item访问子view的途径，这样就可以改变子view的edit mode</li>
+</ul>
+
+
+<h4>Tab Bar Controller使用一个子VC的集合</h4>
+
+<p><img class="center" src="/images/iOS/2015-07-14_3.png" width="572"></p>
+
+<p>Tab Bar Controller定义了一些行为：</p>
+
+<ul>
+<li>viewControllers &ndash; 所有子vc</li>
+<li>selectedViewController &ndash; 设置或读取哪个子vc</li>
+<li>delegate &ndash; 可以让使用者当状态改变的时候收到通知</li>
+</ul>
+
+
+<p>Tab Bar Controller 使用子VC的一些属性来改变当前显示的内容。</p>
+
+<ul>
+<li>tabBarItem &ndash; 提供了底部bar的内容</li>
+</ul>
+
+
+<h4>Page Controller使用DataSource去显示新的子VC</h4>
+
+<p>Page Controller支持无限多的页面显示，所以把所有的page都放在内存中是不可能的。相反，page controller在需要的时候拉取需要的page。这样page controller就使用一个pull model而不是让app把所有的page一下子push到里面</p>
+
+<p>Page Controller定义了一些行为：</p>
+
+<ul>
+<li>spineLocation &ndash; 定义page是如何组织的，有时候只显示一个page，有时候需要两个</li>
+<li>transitionStyle &ndash; 定义了过场动画的风格</li>
+</ul>
+
+
+<h4>实现自定义Container Controller</h4>
+
+<h5>增加和移除子vc</h5>
+
+<p>始终应该记住的是，在<code>addSubview</code><em>之前</em><code>addChildViewController</code>,在<code>removeFromSuperVieww</code><em>之后</em><code>removeFromParentViewController</code>。</p>
+
+<p>另外，设置子view的大小最好也在addSubview之前</p>
+
+<p>增加</p>
+
+<pre><code>- (void) displayContentController: (UIViewController*) content;
+{
+    [self addChildViewController:content];                 
+    content.view.frame = [self frameForContentController]; 
+    [self.view addSubview:self.currentClientView];
+    [content didMoveToParentViewController:self];          
+}
+</code></pre>
+
+<ul>
+<li><code>addChildViewController</code>会自动调用<code>willMoveToPa</code></li>
+</ul>
+
+
+<p>移除</p>
+
+<pre><code>- (void) hideContentController: (UIViewController*) content
+{
+    [content willMoveToParentViewController:nil];  
+    [content.view removeFromSuperview];            
+    [content removeFromParentViewController];      
+}
+</code></pre>
+
+<h5>简单的转场动画</h5>
+
+<pre><code>- (void) cycleFromViewController: (UIViewController*) oldC
+        toViewController: (UIViewController*) newC
+{
+    [oldC willMoveToParentViewController:nil];                        
+    [self addChildViewController:newC];
+
+    newC.view.frame = [self newViewStartFrame];                       
+    CGRect endFrame = [self oldViewEndFrame];
+
+    [self transitionFromViewController: oldC toViewController: newC   
+          duration: 0.25 options:0
+          animations:^{
+             newC.view.frame = oldC.view.frame;                       
+             oldC.view.frame = endFrame;
+          }
+          completion:^(BOOL finished) {
+             [oldC removeFromParentViewController];                   
+             [newC didMoveToParentViewController:self];
+          }];
+}
+</code></pre>
+
+<h5>自定义显示和旋转的Callback行为</h5>
+
+<p>多数时候不用管这个事情，但是有时候你希望自己控制消息发送的时机之类的情况</p>
+
+<pre><code>- (BOOL) shouldAutomaticallyForwardAppearanceMethods
+{
+    return NO;
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [self.child beginAppearanceTransition: YES animated: animated];
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    [self.child endAppearanceTransition];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [self.child beginAppearanceTransition: NO animated: animated];
+}
+
+-(void) viewDidDisappear:(BOOL)animated
+{
+    [self.child endAppearanceTransition];
+}
+</code></pre>
+
+<p>旋转与显示类似，首先要重载<code>shouldAutomaticallyForwardRotationMethods</code>，然后在合适的地方调用</p>
+
+<ul>
+<li><code>willRotateToInterfaceOrientation:duration:</code></li>
+<li><code>willAnimateRotationToInterfaceOrientation:duration:</code></li>
+<li><code>didRotateFromInterfaceOrientation:</code></li>
+</ul>
+
+
+<h5>Best practices</h5>
+
+<ul>
+<li>不要干这事！！因为毕竟实现一个复杂的container不是一件容易的事情</li>
+<li>只访问子VC的最顶层的那个View，其他View不要碰！</li>
+<li>如果需要子VC暴露一些接口，可以使用protocol！</li>
+</ul>
+
+
+<p>如下</p>
+
+<pre><code>@protocol MyContentContainerProtocol &lt;NSObject&gt;
+    ...
+@end
+- (void) displayContentController: (UIViewController&lt;MyContentContainerProtocol&gt;*) content;
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-14T15:14:19+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:14 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>ios</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/07/14/creating-custom-container-view-controllers/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/07/14/creating-custom-container-view-controllers/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/13/how-to-use-messenger/" title="Previous Post: Android中如何使用Messenger">&laquo; Android中如何使用Messenger</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

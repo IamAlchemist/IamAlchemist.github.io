@@ -9,6 +9,7 @@ categories: iOS swift
 `extensions`可以给已有的type增加功能，而且不必访问源代码(`retroactive modeling`)
 
 `extensions`可以
+
 * 增加`computed property`和`computed static property`
 * 定义`instance methods`和`type methods`
 * 提供新的`initializers`
@@ -17,6 +18,7 @@ categories: iOS swift
 * 为一个`type`实现一个`protocol`
 
 `extension`不可以
+
 * `extension`可以增加新的`funtionality`，但是不能覆盖以有的`functionality`
 * `extension`不能增加`stored properties`，或者给存在的`property`增加`property observers`
 * `extension`不能增加新的`designated initializer`

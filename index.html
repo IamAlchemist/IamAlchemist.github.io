@@ -9,7 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="多数情况下，container view controller 就像普通的view controller。它管理着view，内容，与其他对象协同工作，并且响应在repsonder chain里的事件。 当你设计一个container的时候，你需要显式的在你的container， &hellip;">
+  <meta name="description" content="Apple参考文档 创建Constraint 你可以使用NSLayoutConstraint来表示constrains。 如果要创建constraints，一般要使用 constraintsWithVisualFormat:options:metrics:views:。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/16/working-with-auto-layout-programmatically/">使用代码来控制AutoLayout</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-16T14:15:18+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:15 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AutoLayoutinCode/AutoLayoutinCode.html">Apple参考文档</a></p>
+
+<h3>创建Constraint</h3>
+
+<p>你可以使用<code>NSLayoutConstraint</code>来表示constrains。</p>
+
+<p>如果要创建constraints，一般要使用 <code>constraintsWithVisualFormat:options:metrics:views:</code>。</p>
+
+<p>第一个参数是一个<code>visual format string</code>，这种<code>visual format language</code>已经尽可能的是自我解释的。一个view使用一个方括号来代表，view之间的连接用横杠来代表。<code>visual format language</code>的语法参见<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3-SW1">Visual Format Language</a></p>
+
+<p>比如说，</p>
+
+<p><img class="center" src="/images/iOS/2015-07-16_1.png" width="273"></p>
+
+<p>上图可以表示为:</p>
+
+<pre><code>[button1]-12-[button2]
+</code></pre>
+
+<p>如果是标准的Aqua距离的话，可以不用标注数字</p>
+
+<pre><code>[button1]-[button2]
+</code></pre>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/16/working-with-auto-layout-programmatically/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -281,18 +338,26 @@
 
   <div class="entry-content"><p><code>extensions</code>可以给已有的type增加功能，而且不必访问源代码(<code>retroactive modeling</code>)</p>
 
-<p><code>extensions</code>可以
-* 增加<code>computed property</code>和<code>computed static property</code>
-* 定义<code>instance methods</code>和<code>type methods</code>
-* 提供新的<code>initializers</code>
-* 定义<code>subscripts</code>
-* 定义和使用新的<code>nested types</code>
-* 为一个<code>type</code>实现一个<code>protocol</code></p>
+<p><code>extensions</code>可以</p>
 
-<p><code>extension</code>不可以
-* <code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code>
-* <code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code>
-* <code>extension</code>不能增加新的<code>designated initializer</code></p>
+<ul>
+<li>增加<code>computed property</code>和<code>computed static property</code></li>
+<li>定义<code>instance methods</code>和<code>type methods</code></li>
+<li>提供新的<code>initializers</code></li>
+<li>定义<code>subscripts</code></li>
+<li>定义和使用新的<code>nested types</code></li>
+<li>为一个<code>type</code>实现一个<code>protocol</code></li>
+</ul>
+
+
+<p><code>extension</code>不可以</p>
+
+<ul>
+<li><code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code></li>
+<li><code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code></li>
+<li><code>extension</code>不能增加新的<code>designated initializer</code></li>
+</ul>
+
 
 </div>
   
@@ -406,41 +471,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/06/10/swift-initialization/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/">使用swift生成Frameworks</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-06-09T19:04:02+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:04 pm</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>制作Dynamically Linked Frameworks</h3>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/">Read on &rarr;</a>
     </footer>
   
 

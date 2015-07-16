@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ios | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-14T17:43:07+08:00</updated>
+  <updated>2015-07-16T15:14:47+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用代码来控制AutoLayout]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/07/16/working-with-auto-layout-programmatically/"/>
+    <updated>2015-07-16T14:15:18+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/07/16/working-with-auto-layout-programmatically</id>
+    <content type="html"><![CDATA[<p><a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AutoLayoutinCode/AutoLayoutinCode.html">Apple参考文档</a></p>
+
+<h3>创建Constraint</h3>
+
+<p>你可以使用<code>NSLayoutConstraint</code>来表示constrains。</p>
+
+<p>如果要创建constraints，一般要使用 <code>constraintsWithVisualFormat:options:metrics:views:</code>。</p>
+
+<p>第一个参数是一个<code>visual format string</code>，这种<code>visual format language</code>已经尽可能的是自我解释的。一个view使用一个方括号来代表，view之间的连接用横杠来代表。<code>visual format language</code>的语法参见<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3-SW1">Visual Format Language</a></p>
+
+<p>比如说，</p>
+
+<p><img class="center" src="/images/iOS/2015-07-16_1.png" width="273"></p>
+
+<p>上图可以表示为:</p>
+
+<pre><code>[button1]-12-[button2]
+</code></pre>
+
+<p>如果是标准的Aqua距离的话，可以不用标注数字</p>
+
+<pre><code>[button1]-[button2]
+</code></pre>
+
+<!--more-->
+
+
+<p>view的名字来自于参数<code>views</code>字典。key就是这里用到名字，而value是对应的view对象。</p>
+
+<p>可以使用<code>NSDictionaryOfVariableBindings</code>来创建该字典，该函数使用view对象的名字来作为key值</p>
+
+<pre><code>NSDictionary *viewsDictionary =
+    NSDictionaryOfVariableBindings(self.button1, self.button2);
+
+NSArray *constraints =
+    [NSLayoutConstraint constraintsWithVisualFormat:@"[button1]-[button2]"
+                        options:0 metrics:nil views:viewsDictionary];
+</code></pre>
+
+<p>并不是每一种constraint都可以通过visual format language来表示的。比如有一种常用的constraint不能用该语言来表达，比如固定宽高比，这时候需要用这样的函数：</p>
+
+<p><code>constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constraint:</code></p>
+
+<p>比如上面contraint还可以这样创建</p>
+
+<pre><code>[NSLayoutConstraint constraintWithItem:self.button1 
+                             attribute:NSLayoutAttributeRight
+                             relatedBy:NSLayoutRelationEqual 
+                                toItem:self.button2
+                             attribute:NSLayoutAttributeLeft 
+                            multiplier:1.0 
+                              constant:-12.0];
+</code></pre>
+
+<h3>Installing Constraints</h3>
+
+<p>我们必须把constraint加到view中，这个view应该是所有涉及到的view的祖先view，通常是最近的那个祖先view。</p>
+
+<p>关于这个我们可以使用<code>NSView</code>的<code>addConstraint:</code></p>
+
+<p>相关的函数还有：</p>
+
+<ul>
+<li><code>removeConstraint:</code></li>
+<li><code>constraints</code></li>
+<li><code>fittingSize</code></li>
+</ul>
+
+
+<h3>参考资料</h3>
+
+<ul>
+<li>最重要的一个开源库可以帮助我们不用写那么多无聊的代码</li>
+</ul>
+
+
+<p><a href="https://github.com/SnapKit/Masonry">Masonry</a></p>
+
+<pre><code>[view1 mas_makeConstraints:^(MASConstraintMaker *make) {
+    make.edges.equalTo(superview).with.insets(padding);
+}];
+</code></pre>
+
+<ul>
+<li><a href="http://segmentfault.com/a/1190000000646452">从此爱上iOS Autolayout</a></li>
+<li><a href="http://www.raywenderlich.com/50317/beginning-auto-layout-tutorial-in-ios-7-part-1">Beginning Auto Layout Tutorial in iOS 7: Part 1</a></li>
+<li><a href="http://www.raywenderlich.com/50319/beginning-auto-layout-tutorial-in-ios-7-part-2">Beginning Auto Layout Tutorial in iOS 7: Part 2</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[自定义Container View Controllers]]></title>
@@ -460,18 +557,26 @@ if let beginsWithThe = john.residence?.address?.buildingIdentifier()?.hasPrefix(
     <id>http://IamAlchemist.github.io/blog/2015/06/17/swift-extension</id>
     <content type="html"><![CDATA[<p><code>extensions</code>可以给已有的type增加功能，而且不必访问源代码(<code>retroactive modeling</code>)</p>
 
-<p><code>extensions</code>可以
-* 增加<code>computed property</code>和<code>computed static property</code>
-* 定义<code>instance methods</code>和<code>type methods</code>
-* 提供新的<code>initializers</code>
-* 定义<code>subscripts</code>
-* 定义和使用新的<code>nested types</code>
-* 为一个<code>type</code>实现一个<code>protocol</code></p>
+<p><code>extensions</code>可以</p>
 
-<p><code>extension</code>不可以
-* <code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code>
-* <code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code>
-* <code>extension</code>不能增加新的<code>designated initializer</code></p>
+<ul>
+<li>增加<code>computed property</code>和<code>computed static property</code></li>
+<li>定义<code>instance methods</code>和<code>type methods</code></li>
+<li>提供新的<code>initializers</code></li>
+<li>定义<code>subscripts</code></li>
+<li>定义和使用新的<code>nested types</code></li>
+<li>为一个<code>type</code>实现一个<code>protocol</code></li>
+</ul>
+
+
+<p><code>extension</code>不可以</p>
+
+<ul>
+<li><code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code></li>
+<li><code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code></li>
+<li><code>extension</code>不能增加新的<code>designated initializer</code></li>
+</ul>
+
 
 <!--more-->
 
@@ -572,40 +677,6 @@ var someInt = 3.square()
         }
     }
 }
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift中optional]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/"/>
-    <updated>2015-06-12T15:37:14+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2015/06/12/swift-optional</id>
-    <content type="html"><![CDATA[<p>关于<code>optional</code>，最需要说的是为什么需要<code>optional</code>，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是<code>optional</code>的目的</p>
-
-<!--more-->
-
-
-<p>关于<code>optional</code>，剩下的只是swift里面有关的特殊术语，搞清楚还是很有必要的</p>
-
-<h4>Force Unwrapping</h4>
-
-<p><code>Force Unwarpping</code>指的是把<code>optional</code>对象转化成一个非空的对象</p>
-
-<h4>Optional Binding</h4>
-
-<p>其基本形式是</p>
-
-<pre><code>if let constantName = someOptional
-
-while let constantName = someOptional
-</code></pre>
-
-<h4>Implicity Unwrapped Optionals</h4>
-
-<p>一个optinal变量可以定义为<code>implicity unwrapped optionals</code>, 那么使用这个变量的时候就不再需要force unwrap, 一旦unwrap失败，程序会崩溃</p>
-
-<pre><code>var storyboardName : String! = "hello"
 </code></pre>
 ]]></content>
   </entry>

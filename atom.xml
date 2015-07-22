@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-16T15:14:47+08:00</updated>
+  <updated>2015-07-22T11:31:03+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[到底能不能在extension里override一个函数？]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension/"/>
+    <updated>2015-07-22T11:12:03+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension</id>
+    <content type="html"><![CDATA[<p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
+
+<!--more-->
+
+
+<p>在<a href="http://stackoverflow.com/questions/27109006/can-you-override-between-extensions-in-swift-or-not-compiler-seems-confused">stackoverflow</a>上找到了答案，并且自己也确认过了。</p>
+
+<p>解释是这样的：</p>
+
+<p>至少在目前版本（swift1.1， 1.2），只要在如下两种情况下就可以override函数</p>
+
+<ul>
+<li>涉及到的类都是从NSObject继承来的</li>
+<li>不使用inout修饰符</li>
+<li>或者使用了@objc修饰符的函数</li>
+</ul>
+
+
+<p>请参考下面的例子</p>
+
+<h4>例子1</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="nl">A</span> <span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'><span class="k">class</span> <span class="nl">B</span> <span class="p">:</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">SubNSObject</span> <span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{}</span>
+</span><span class='line'><span class="k">class</span> <span class="n">NotSubbed</span> <span class="p">{}</span>
+</span><span class='line'><span class="k">enum</span> <span class="n">SomeEnum</span> <span class="p">{</span> <span class="k">case</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="n">A</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;YinA&quot;</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">A</span> <span class="p">{</span> <span class="k">return</span> <span class="n">A</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">g</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">func</span> <span class="n">h</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">NotSubbed</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">j</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SomeEnum</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">func</span> <span class="n">k</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="k">inout</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="n">B</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// THESE OVERIDES DO COMPILE:</span>
+</span><span class='line'>    <span class="kr">override</span> <span class="k">var</span>  <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;YinB&quot;</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>    <span class="kr">override</span> <span class="k">func</span> <span class="n">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">A</span> <span class="p">{</span> <span class="k">return</span> <span class="n">A</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>    <span class="kr">override</span> <span class="k">func</span> <span class="n">g</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// THESE OVERIDES DO NOT COMPILE:</span>
+</span><span class='line'>    <span class="c1">//override func h(val: NotSubbed, test: Bool = false) { }</span>
+</span><span class='line'>    <span class="c1">//override func j(val: SomeEnum) { }</span>
+</span><span class='line'>    <span class="c1">//override func k(val: SubNSObject, inout test: Bool) { }</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>例子2</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">B</span> <span class="p">:</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="n">A</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="p">@</span><span class="n">objc</span> <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;YinA&quot;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="n">B</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="p">@</span><span class="n">objc</span> <span class="kr">override</span> <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;YinB&quot;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用代码来控制AutoLayout]]></title>
@@ -1686,36 +1809,6 @@ A process that doesn&rsquo;t hold any active application components. The only re
 <img src="http://IamAlchemist.github.io/images/multi-window-app.png"></p></li>
 <li><p>Windows and menus displayed by apps &amp; the system
 <img src="http://IamAlchemist.github.io/images/window_layer_image.png"></p></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[A Glance at App Design Pattern]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern/"/>
-    <updated>2014-10-24T18:09:53+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern</id>
-    <content type="html"><![CDATA[<!--more-->
-
-
-<ul>
-<li><p>Model-View-Controller
-<img src="http://IamAlchemist.github.io/images/model_view_controller.png"></p></li>
-<li><p>Delegation: Action on Behalf of Another Object
-<img src="http://IamAlchemist.github.io/images/delegation.png"></p></li>
-<li><p>Protocol: Enabling Communication Between Objects Not Related by Inheritance
-<img src="http://IamAlchemist.github.io/images/protocol.png"></p></li>
-<li><p>Notification Center: Nofifying Interested Observers of an Event
-<img src="http://IamAlchemist.github.io/images/notificationcenter.png"></p></li>
-<li><p>Target-Action: Encapsulating a Message to be Sent When an Event Occurs
-<img src="http://IamAlchemist.github.io/images/target_action.png"></p></li>
-<li><p>Key-Value Observing: Notifying an Observer When a Value Changes
-<img src="http://IamAlchemist.github.io/images/kvo.png"></p></li>
-<li><p>View hierarchy</p></li>
-<li>Responder chain</li>
-<li>Receptionist</li>
-<li>Category</li>
 </ul>
 
 ]]></content>

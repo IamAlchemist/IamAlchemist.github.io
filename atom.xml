@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-22T11:31:03+08:00</updated>
+  <updated>2015-07-23T14:24:29+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,102 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Create Universal Framework]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/07/22/create-universal-framework/"/>
+    <updated>2015-07-22T19:45:58+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/07/22/create-universal-framework</id>
+    <content type="html"><![CDATA[<p>xcode很有意思，当选择平台是iOS device时，framework支持的architecture是arm系列的，然而如果是iOS simulator的话，又仅产生支持x86_64系列的architecture。</p>
+
+<p>那么当我们如何编译framework时使它可以支持所有architecture呢</p>
+
+<p><a href="https://medium.com/@syshen/create-an-ios-universal-framework-148eb130a46c">参考资料1</a></p>
+
+<p><a href="https://kodmunki.wordpress.com/2015/03/04/cocoa-touch-frameworks-for-ios8-remix/">参考资料2</a></p>
+
+<!--more-->
+
+
+<p>要点如下：</p>
+
+<p>在build phases里增加一个脚本</p>
+
+<pre><code>######################
+# Options
+######################
+
+REVEAL_ARCHIVE_IN_FINDER=false
+
+FRAMEWORK_NAME="${PROJECT_NAME}"
+
+SIMULATOR_LIBRARY_PATH="${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework"
+
+DEVICE_LIBRARY_PATH="${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework"
+
+UNIVERSAL_LIBRARY_DIR="${BUILD_DIR}/${CONFIGURATION}-iphoneuniversal"
+
+FRAMEWORK="${UNIVERSAL_LIBRARY_DIR}/${FRAMEWORK_NAME}.framework"
+
+
+######################
+# Build Frameworks
+######################
+
+xcodebuild -workspace ${PROJECT_NAME}.xcworkspace -scheme ${PROJECT_NAME} -sdk iphonesimulator -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator 2&gt;&amp;1
+
+xcodebuild -workspace ${PROJECT_NAME}.xcworkspace -scheme ${PROJECT_NAME} -sdk iphoneos -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos 2&gt;&amp;1
+
+######################
+# Create directory for universal
+######################
+
+rm -rf "${UNIVERSAL_LIBRARY_DIR}"
+
+mkdir "${UNIVERSAL_LIBRARY_DIR}"
+
+mkdir "${FRAMEWORK}"
+
+
+######################
+# Copy files Framework
+######################
+
+cp -r "${DEVICE_LIBRARY_PATH}/." "${FRAMEWORK}"
+
+
+######################
+# Make an universal binary
+######################
+
+lipo "${SIMULATOR_LIBRARY_PATH}/${FRAMEWORK_NAME}" "${DEVICE_LIBRARY_PATH}/${FRAMEWORK_NAME}" -create -output "${FRAMEWORK}/${FRAMEWORK_NAME}" | echo
+
+# For Swift framework, Swiftmodule needs to be copied in the universal framework
+if [ -d "${SIMULATOR_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/" ]; then
+    cp -f ${SIMULATOR_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/* "${FRAMEWORK}/Modules/${FRAMEWORK_NAME}.swiftmodule/" | echo
+fi
+
+if [ -d "${DEVICE_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/" ]; then
+    cp -f ${DEVICE_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/* "${FRAMEWORK}/Modules/${FRAMEWORK_NAME}.swiftmodule/" | echo
+fi
+
+######################
+# On Release, copy the result to release directory
+######################
+
+OUTPUT_DIR="${PROJECT_DIR}/Output/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/"
+
+rm -rf "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR"
+
+cp -r "${FRAMEWORK}" "$OUTPUT_DIR"
+
+if [ ${REVEAL_ARCHIVE_IN_FINDER} = true ]; then
+    open "${OUTPUT_DIR}/"
+fi
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[到底能不能在extension里override一个函数？]]></title>
@@ -1782,33 +1878,6 @@ A process that doesn&rsquo;t hold any active application components. The only re
 </code></pre></li>
 <li><p>save the service as &ldquo;lockscreen&rdquo;</p></li>
 <li>set the shortcut key for the service in keyboard->shortcut keys</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Core Objects for App]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app/"/>
-    <updated>2014-10-27T14:20:29+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app</id>
-    <content type="html"><![CDATA[<ul>
-<li>Key objects in a single-window app</li>
-<li>Key objects in a multi-window app</li>
-<li>Windows and menus displayed by apps &amp; the system</li>
-</ul>
-
-
-<!--more-->
-
-
-<ul>
-<li><p>Key objects in a single-window app
-<img src="http://IamAlchemist.github.io/images/single-window-app.png"></p></li>
-<li><p>Key objects in a multi-window app
-<img src="http://IamAlchemist.github.io/images/multi-window-app.png"></p></li>
-<li><p>Windows and menus displayed by apps &amp; the system
-<img src="http://IamAlchemist.github.io/images/window_layer_image.png"></p></li>
 </ul>
 
 ]]></content>

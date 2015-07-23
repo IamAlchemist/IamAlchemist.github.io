@@ -10,7 +10,9 @@ xcode很有意思，当选择平台是iOS device时，framework支持的architec
 
 那么当我们如何编译framework时使它可以支持所有architecture呢
 
-[参考资料](https://medium.com/@syshen/create-an-ios-universal-framework-148eb130a46c)
+[参考资料1](https://medium.com/@syshen/create-an-ios-universal-framework-148eb130a46c)
+
+[参考资料2](https://kodmunki.wordpress.com/2015/03/04/cocoa-touch-frameworks-for-ios8-remix/)
 
 <!--more-->
 

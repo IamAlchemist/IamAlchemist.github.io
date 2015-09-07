@@ -1,0 +1,429 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>新Android Gradle Build Tools: Gradle 2.5 - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。 翻译自inthechessefactory 什么是Android Gradle Build Tools &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">新Android Gradle Build Tools: Gradle 2.5</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-07T16:22:45+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:22 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。</p>
+
+<p>翻译自<a href="http://inthecheesefactory.com/blog/new-gradle-build-tools-with-gradle-2.5/en">inthechessefactory</a></p>
+
+<!--more-->
+
+
+<h4>什么是Android Gradle Build Tools</h4>
+
+<p>在把每个module的build.gradle文件传递给Gradle之前，Android Gradle Build Tools 用来提前处理下这些文件。</p>
+
+<p>Gradle Build Tools的版本是在project的build.gradle里指定的，类似：</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle:1.2.3'
+}
+</code></pre>
+
+<p>Gradle Build Tools版本和Gradle版本对应关系如下：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">Android Gradle Plugin </th>
+<th style="text-align:left;"> Gradle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">1.0.0-1.1.3           </td>
+<td style="text-align:left;">2.2.1-2.3</td>
+</tr>
+<tr>
+<td style="text-align:left;">1.2+                  </td>
+<td style="text-align:left;">2..2.1+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>The new Android Gradle Build Tools</h4>
+
+<p>使用新的Gradle Build Tools的话，只需要换掉build tools的version</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle-experimental:0.1.0'
+}
+</code></pre>
+
+<p>不过只有gradle2.5才能匹配使用，所以需要设置gradle-wrapper.properties</p>
+
+<pre><code>distributionUrl=https\://services.gradle.org/distributions/gradle-2.5-bin.zip
+</code></pre>
+
+<p>然后像下面这样编辑模块的build.gradle</p>
+
+<pre><code>apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 22
+        buildToolsVersion = "23.0.0 rc3"
+
+        defaultConfig.with {
+            applicationId = "com.inthecheesefactory.hellojni25"
+            minSdkVersion.apiLevel = 15
+            targetSdkVersion.apiLevel = 22
+            versionCode = 1
+            versionName = "1.0"
+        }
+    }
+
+    android.buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles += file('proguard-rules.pro')
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+}
+</code></pre>
+
+<p>仔细看就会发现，plugin不再是<code>com.android.application</code>，而是<code>com.android.model.application</code>。<br/>
+<code>+=</code>被引入表示在一个collection中增加一些元素。</p>
+
+<h4>支持 NDK</h4>
+
+<p>修改项目的local.properites文件</p>
+
+<pre><code>ndk.dir=PATH_TO_NDK_ROOT
+</code></pre>
+
+<p>，或者直接使用android studio下载ndk</p>
+
+<p>然后在java的package里创建<code>HelloJni.java</code>文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloJni</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">stringFromJNI</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在src/main目录下创建jni文件夹，然后创建hello-jni.c文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;jni.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">jstring</span>
+</span><span class='line'><span class="nf">Java_com_inthecheesefactory_hellojni25_HelloJni_stringFromJNI</span><span class="p">(</span> <span class="n">JNIEnv</span><span class="o">*</span> <span class="n">env</span><span class="p">,</span>
+</span><span class='line'>                                                  <span class="n">jobject</span> <span class="n">thiz</span> <span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="cp">#if defined(__arm__)</span>
+</span><span class='line'>  <span class="cp">#if defined(__ARM_ARCH_7A__)</span>
+</span><span class='line'>    <span class="cp">#if defined(__ARM_NEON__)</span>
+</span><span class='line'>      <span class="cp">#if defined(__ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a/NEON (hard-float)&quot;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a/NEON&quot;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#else</span>
+</span><span class='line'>      <span class="cp">#if defined(__ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a (hard-float)&quot;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a&quot;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#endif</span>
+</span><span class='line'>  <span class="cp">#else</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;armeabi&quot;</span>
+</span><span class='line'>  <span class="cp">#endif</span>
+</span><span class='line'><span class="cp">#elif defined(__i386__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;x86&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__x86_64__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;x86_64&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__mips64)  </span><span class="cm">/* mips64el-* toolchain defines __mips__ too */</span><span class="cp"></span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;mips64&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__mips__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;mips&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__aarch64__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;arm64-v8a&quot;</span>
+</span><span class='line'><span class="cp">#else</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;unknown&quot;</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;Hello from JNI !!  Compiled with ABI &quot;</span> <span class="n">ABI</span> <span class="s">&quot;.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>请记住让<code>com_inthecheesefactory_hellojni25</code>和HelloJni.java的包名是一致的。makefile不再需要了。</p>
+
+<p>现在在<code>MainActivity.java</code>里测试一下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span>
+</span><span class='line'>                    <span class="k">new</span> <span class="nf">HelloJni</span><span class="o">().</span><span class="na">stringFromJNI</span><span class="o">(),</span>
+</span><span class='line'>                    <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_LONG</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;hello-jni&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="https://www.youtube.com/watch?v=SeKXi-viRrk">more video</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-09-07T16:22:45+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:22 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/22/create-universal-framework/" title="Previous Post: create universal framework">&laquo; create universal framework</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-23T14:24:29+08:00</updated>
+  <updated>2015-09-07T17:40:00+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,250 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[新Android Gradle Build Tools: Gradle 2.5]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/"/>
+    <updated>2015-09-07T16:22:45+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5</id>
+    <content type="html"><![CDATA[<p>Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。</p>
+
+<p>翻译自<a href="http://inthecheesefactory.com/blog/new-gradle-build-tools-with-gradle-2.5/en">inthechessefactory</a></p>
+
+<!--more-->
+
+
+<h4>什么是Android Gradle Build Tools</h4>
+
+<p>在把每个module的build.gradle文件传递给Gradle之前，Android Gradle Build Tools 用来提前处理下这些文件。</p>
+
+<p>Gradle Build Tools的版本是在project的build.gradle里指定的，类似：</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle:1.2.3'
+}
+</code></pre>
+
+<p>Gradle Build Tools版本和Gradle版本对应关系如下：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">Android Gradle Plugin </th>
+<th style="text-align:left;"> Gradle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">1.0.0-1.1.3           </td>
+<td style="text-align:left;">2.2.1-2.3</td>
+</tr>
+<tr>
+<td style="text-align:left;">1.2+                  </td>
+<td style="text-align:left;">2..2.1+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>The new Android Gradle Build Tools</h4>
+
+<p>使用新的Gradle Build Tools的话，只需要换掉build tools的version</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle-experimental:0.1.0'
+}
+</code></pre>
+
+<p>不过只有gradle2.5才能匹配使用，所以需要设置gradle-wrapper.properties</p>
+
+<pre><code>distributionUrl=https\://services.gradle.org/distributions/gradle-2.5-bin.zip
+</code></pre>
+
+<p>然后像下面这样编辑模块的build.gradle</p>
+
+<pre><code>apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 22
+        buildToolsVersion = "23.0.0 rc3"
+
+        defaultConfig.with {
+            applicationId = "com.inthecheesefactory.hellojni25"
+            minSdkVersion.apiLevel = 15
+            targetSdkVersion.apiLevel = 22
+            versionCode = 1
+            versionName = "1.0"
+        }
+    }
+
+    android.buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles += file('proguard-rules.pro')
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+}
+</code></pre>
+
+<p>仔细看就会发现，plugin不再是<code>com.android.application</code>，而是<code>com.android.model.application</code>。<br/>
+<code>+=</code>被引入表示在一个collection中增加一些元素。</p>
+
+<h4>支持 NDK</h4>
+
+<p>修改项目的local.properites文件</p>
+
+<pre><code>ndk.dir=PATH_TO_NDK_ROOT
+</code></pre>
+
+<p>，或者直接使用android studio下载ndk</p>
+
+<p>然后在java的package里创建<code>HelloJni.java</code>文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloJni</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">stringFromJNI</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在src/main目录下创建jni文件夹，然后创建hello-jni.c文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;jni.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">jstring</span>
+</span><span class='line'><span class="nf">Java_com_inthecheesefactory_hellojni25_HelloJni_stringFromJNI</span><span class="p">(</span> <span class="n">JNIEnv</span><span class="o">*</span> <span class="n">env</span><span class="p">,</span>
+</span><span class='line'>                                                  <span class="n">jobject</span> <span class="n">thiz</span> <span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="cp">#if defined(__arm__)</span>
+</span><span class='line'>  <span class="cp">#if defined(__ARM_ARCH_7A__)</span>
+</span><span class='line'>    <span class="cp">#if defined(__ARM_NEON__)</span>
+</span><span class='line'>      <span class="cp">#if defined(__ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a/NEON (hard-float)&quot;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a/NEON&quot;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#else</span>
+</span><span class='line'>      <span class="cp">#if defined(__ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a (hard-float)&quot;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &quot;armeabi-v7a&quot;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#endif</span>
+</span><span class='line'>  <span class="cp">#else</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;armeabi&quot;</span>
+</span><span class='line'>  <span class="cp">#endif</span>
+</span><span class='line'><span class="cp">#elif defined(__i386__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;x86&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__x86_64__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;x86_64&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__mips64)  </span><span class="cm">/* mips64el-* toolchain defines __mips__ too */</span><span class="cp"></span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;mips64&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__mips__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;mips&quot;</span>
+</span><span class='line'><span class="cp">#elif defined(__aarch64__)</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;arm64-v8a&quot;</span>
+</span><span class='line'><span class="cp">#else</span>
+</span><span class='line'>   <span class="cp">#define ABI &quot;unknown&quot;</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;Hello from JNI !!  Compiled with ABI &quot;</span> <span class="n">ABI</span> <span class="s">&quot;.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>请记住让<code>com_inthecheesefactory_hellojni25</code>和HelloJni.java的包名是一致的。makefile不再需要了。</p>
+
+<p>现在在<code>MainActivity.java</code>里测试一下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span>
+</span><span class='line'>                    <span class="k">new</span> <span class="nf">HelloJni</span><span class="o">().</span><span class="na">stringFromJNI</span><span class="o">(),</span>
+</span><span class='line'>                    <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_LONG</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;hello-jni&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="https://www.youtube.com/watch?v=SeKXi-viRrk">more video</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Create Universal Framework]]></title>
@@ -110,11 +354,20 @@ fi
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[到底能不能在extension里override一个函数？]]></title>
+    <title type="html"><![CDATA[Override Function in Extension]]></title>
     <link href="http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension/"/>
-    <updated>2015-07-22T11:12:03+08:00</updated>
+    <updated>2015-07-22T00:00:00+08:00</updated>
     <id>http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension</id>
-    <content type="html"><![CDATA[<p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
+    <content type="html"><![CDATA[<hr />
+
+<p>layout: post
+title: &ldquo;到底能不能在extension里override一个函数？&rdquo;
+date: 2015-07-22 11:12:03 +0800
+comments: true</p>
+
+<h2>categories: iOS Swift</h2>
+
+<p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
 
 <!--more-->
 
@@ -126,11 +379,12 @@ fi
 <p>至少在目前版本（swift1.1， 1.2），只要在如下两种情况下就可以override函数</p>
 
 <ul>
-<li>涉及到的类都是从NSObject继承来的</li>
-<li>不使用inout修饰符</li>
+<li>涉及到的类都是从NSObject继承来的,不使用inout修饰符并且没有enum</li>
 <li>或者使用了@objc修饰符的函数</li>
 </ul>
 
+
+<p>核心思想是，只有<em>Objective-C compatible</em>的方法和属性才能在extension里override</p>
 
 <p>请参考下面的例子</p>
 
@@ -1856,30 +2110,6 @@ A process that doesn&rsquo;t hold any active application components. The only re
 <p>Domain – 域。指定关联的WEB服务器或域。值是域名，比如zdnet.com。这是对path路径属性的一个延伸。如果我们想让catalog.mycompany.com 能够访问shoppingcart.mycompany.com设置的cookies，该怎么办? 我们可以把domain属性设置成“mycompany.com”，并把path属性设置成“/”。FYI：不能把cookies域属性设置成与设置它的服务器的所在域不同的值。</p>
 
 <p>Secure – 安全。指定cookie的值通过网络如何在用户和WEB服务器之间传递。这个属性的值或者是“secure”，或者为空。缺省情况下，该属性为空，也就是使用不安全的HTTP连接传递数据。如果一个 cookie 标记为secure，那么，它与WEB服务器之间就通过HTTPS或者其它安全协议传递数据。不过，设置了secure属性不代表其他人不能看到你机器本地保存的cookie。换句话说，把cookie设置为secure，只保证cookie与WEB服务器之间的数据传输过程加密，而保存在本地的cookie文件并不加密。如果想让本地cookie也加密，得自己加密数据。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Lock the Screen in Mac]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac/"/>
-    <updated>2014-10-30T16:46:20+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac</id>
-    <content type="html"><![CDATA[<pre><code>    '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
-</code></pre>
-
-<!--more-->
-
-
-<ul>
-<li>use &ldquo;Automator&rdquo; create a service, then set the input as &ldquo;no input&rdquo;.</li>
-<li><p>drag &ldquo;Run shell script&rdquo; to the editor in right side, then</p>
-
-<pre><code>  '/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession' -suspend
-</code></pre></li>
-<li><p>save the service as &ldquo;lockscreen&rdquo;</p></li>
-<li>set the shortcut key for the service in keyboard->shortcut keys</li>
-</ul>
-
 ]]></content>
   </entry>
   

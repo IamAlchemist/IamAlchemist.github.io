@@ -9,7 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="xcode很有意思，当选择平台是iOS device时，framework支持的architecture是arm系列的，然而如果是iOS simulator的话，又仅产生支持x86_64系列的architecture。 &hellip;">
+  <meta name="description" content="Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。 翻译自inthechessefactory ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +84,43 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/">新Android Gradle Build Tools: Gradle 2.5</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-07T16:22:45+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:22 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。</p>
+
+<p>翻译自<a href="http://inthecheesefactory.com/blog/new-gradle-build-tools-with-gradle-2.5/en">inthechessefactory</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/07/22/create-universal-framework/">Create Universal Framework</a></h1>
     
     
@@ -125,7 +162,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/07/22/override-function-in-extension/">到底能不能在extension里override一个函数？</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/07/22/override-function-in-extension/">Override Function in Extension</a></h1>
     
     
       <p class="meta">
@@ -134,7 +171,7 @@
 
 
 
-<time class='entry-date' datetime='2015-07-22T11:12:03+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>11:12 am</span></time>
+<time class='entry-date' datetime='2015-07-22T00:00:00+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>12:00 am</span></time>
         
         
       </p>
@@ -142,7 +179,16 @@
   </header>
 
 
-  <div class="entry-content"><p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
+  <div class="entry-content"><hr />
+
+<p>layout: post
+title: &ldquo;到底能不能在extension里override一个函数？&rdquo;
+date: 2015-07-22 11:12:03 +0800
+comments: true</p>
+
+<h2>categories: iOS Swift</h2>
+
+<p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
 
 </div>
   
@@ -440,41 +486,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/06/17/swift-extension/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/12/swift-optional/">Swift中optional</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-06-12T15:37:14+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:37 pm</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>关于<code>optional</code>，最需要说的是为什么需要<code>optional</code>，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了，一般来说是用一个特殊值NSNotFound来表示。不过swift可以让一切不存在的变量都为nil，这就是<code>optional</code>的目的</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/06/12/swift-optional/">Read on &rarr;</a>
     </footer>
   
 

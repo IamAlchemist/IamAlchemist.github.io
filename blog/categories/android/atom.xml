@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-23T14:24:29+08:00</updated>
+  <updated>2015-09-07T17:40:00+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,307 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[新Android Gradle Build Tools: Gradle 2.5]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/"/>
+    <updated>2015-09-07T16:22:45+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5</id>
+    <content type="html"><![CDATA[<p>Android Studio 1.3已经除了稳定版了。新特性包括了完全NDK支持，而且一个主要的更改是DSL(Domain-Specific Language)的变化。</p>
+
+<p>翻译自<a href="http://inthecheesefactory.com/blog/new-gradle-build-tools-with-gradle-2.5/en">inthechessefactory</a></p>
+
+<!--more-->
+
+
+<h4>什么是Android Gradle Build Tools</h4>
+
+<p>在把每个module的build.gradle文件传递给Gradle之前，Android Gradle Build Tools 用来提前处理下这些文件。</p>
+
+<p>Gradle Build Tools的版本是在project的build.gradle里指定的，类似：</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle:1.2.3'
+}
+</code></pre>
+
+<p>Gradle Build Tools版本和Gradle版本对应关系如下：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">Android Gradle Plugin </th>
+<th style="text-align:left;"> Gradle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">1.0.0-1.1.3           </td>
+<td style="text-align:left;">2.2.1-2.3</td>
+</tr>
+<tr>
+<td style="text-align:left;">1.2+                  </td>
+<td style="text-align:left;">2..2.1+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>The new Android Gradle Build Tools</h4>
+
+<p>使用新的Gradle Build Tools的话，只需要换掉build tools的version</p>
+
+<pre><code>dependencies {
+    classpath 'com.android.tools.build:gradle-experimental:0.1.0'
+}
+</code></pre>
+
+<p>不过只有gradle2.5才能匹配使用，所以需要设置gradle-wrapper.properties</p>
+
+<pre><code>distributionUrl=https\://services.gradle.org/distributions/gradle-2.5-bin.zip
+</code></pre>
+
+<p>然后像下面这样编辑模块的build.gradle</p>
+
+<pre><code>apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 22
+        buildToolsVersion = "23.0.0 rc3"
+
+        defaultConfig.with {
+            applicationId = "com.inthecheesefactory.hellojni25"
+            minSdkVersion.apiLevel = 15
+            targetSdkVersion.apiLevel = 22
+            versionCode = 1
+            versionName = "1.0"
+        }
+    }
+
+    android.buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles += file('proguard-rules.pro')
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+}
+</code></pre>
+
+<p>仔细看就会发现，plugin不再是<code>com.android.application</code>，而是<code>com.android.model.application</code>。<br/>
+<code>+=</code>被引入表示在一个collection中增加一些元素。</p>
+
+<h4>支持 NDK</h4>
+
+<p>修改项目的local.properites文件</p>
+
+<pre><code>ndk.dir=PATH_TO_NDK_ROOT
+</code></pre>
+
+<p>，或者直接使用android studio下载ndk</p>
+
+<p>然后在java的package里创建<code>HelloJni.java</code>文件</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloJni</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">stringFromJNI</span><span class="o">();</span>
+</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>在src/main目录下创建jni文件夹，然后创建hello-jni.c文件</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">string</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">jni</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">jstring</span>
+</span><span class='line'><span class="n">Java_com_inthecheesefactory_hellojni25_HelloJni_stringFromJNI</span><span class="p">(</span> <span class="n">JNIEnv</span><span class="o">*</span> <span class="n">env</span><span class="p">,</span>
+</span><span class='line'>                                                  <span class="n">jobject</span> <span class="n">thiz</span> <span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">if</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">arm</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="err">#</span><span class="k">if</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">ARM_ARCH_7A</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span>
+</span><span class='line'>    <span class="cp">#if defined(&lt;strong&gt;ARM_NEON&lt;/strong&gt;)</span>
+</span><span class='line'>      <span class="cp">#if defined(&lt;strong&gt;ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &amp;ldquo;armeabi-v7a/NEON (hard-float)&amp;rdquo;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &amp;ldquo;armeabi-v7a/NEON&amp;rdquo;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#else</span>
+</span><span class='line'>      <span class="cp">#if defined(&lt;/strong&gt;ARM_PCS_VFP)</span>
+</span><span class='line'>        <span class="cp">#define ABI &amp;ldquo;armeabi-v7a (hard-float)&amp;rdquo;</span>
+</span><span class='line'>      <span class="cp">#else</span>
+</span><span class='line'>        <span class="cp">#define ABI &amp;ldquo;armeabi-v7a&amp;rdquo;</span>
+</span><span class='line'>      <span class="cp">#endif</span>
+</span><span class='line'>    <span class="cp">#endif</span>
+</span><span class='line'>  <span class="cp">#else</span>
+</span><span class='line'>   <span class="cp">#define ABI &amp;ldquo;armeabi&amp;rdquo;</span>
+</span><span class='line'>  <span class="cp">#endif&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">i386</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">x86</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">x86_64</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">x86_64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">mips64</span><span class="p">)</span>  <span class="o">/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">mips64el</span><span class="o">-&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">toolchain</span> <span class="n">defines</span> <span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">mips__</span> <span class="n">too</span> <span class="err">*/</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">mips64</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">mips</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">mips</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">elif</span> <span class="n">defined</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">aarch64</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">arm64</span><span class="o">-</span><span class="n">v8a</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="err">#</span><span class="n">define</span> <span class="n">ABI</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">unknown</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;Hello from JNI !!  Compiled with ABI &quot;</span> <span class="n">ABI</span> <span class="s">&quot;.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>请记住让<code>com_inthecheesefactory_hellojni25</code>和HelloJni.java的包名是一致的。makefile不再需要了。</p>
+
+<p>现在在<code>MainActivity.java</code>里测试一下</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span>
+</span><span class='line'>                <span class="k">new</span> <span class="nf">HelloJni</span><span class="o">().</span><span class="na">stringFromJNI</span><span class="o">(),</span>
+</span><span class='line'>                <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_LONG</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;hello-jni&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p><a href="https://www.youtube.com/watch?v=SeKXi-viRrk">more video</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Android中如何使用Messenger]]></title>
@@ -252,23 +553,6 @@ interface IRemoteAPI {
 
 
 <p><img class="center" src="/images/android_performace/memory_leak_detection.png" width="600"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android Performance 1: Memory Monitor]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/"/>
-    <updated>2015-05-04T20:32:24+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1</id>
-    <content type="html"><![CDATA[<h3>android studio can trace the general memory usage by <em>Memory Moniter</em></h3>
-
-<!--more-->
-
-
-<p>android studio can trace the general memory usage by <em>Memory Moniter</em><br/>
-<img class="center" src="/images/android_performace/memory_moniter.jpg" width="500"></p>
-
-<p>watch the video <a href="https://www.youtube.com/watch?v=7ls28uGMBEs&amp;list=PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE&amp;index=36">here</a></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Swift | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/swift/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-07-23T14:24:29+08:00</updated>
+  <updated>2015-09-07T17:40:00+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,151 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[到底能不能在extension里override一个函数？]]></title>
-    <link href="http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension/"/>
-    <updated>2015-07-22T11:12:03+08:00</updated>
-    <id>http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension</id>
-    <content type="html"><![CDATA[<p>Swift教程中明确说了，extension并不能override一个已有的函数！可是最近发现有人extension UIImageView时，可以<code>override layoutSubviews()</code>，到底什么鬼？？</p>
-
-<!--more-->
-
-
-<p>在<a href="http://stackoverflow.com/questions/27109006/can-you-override-between-extensions-in-swift-or-not-compiler-seems-confused">stackoverflow</a>上找到了答案，并且自己也确认过了。</p>
-
-<p>解释是这样的：</p>
-
-<p>至少在目前版本（swift1.1， 1.2），只要在如下两种情况下就可以override函数</p>
-
-<ul>
-<li>涉及到的类都是从NSObject继承来的</li>
-<li>不使用inout修饰符</li>
-<li>或者使用了@objc修饰符的函数</li>
-</ul>
-
-
-<p>请参考下面的例子</p>
-
-<h4>例子1</h4>
-
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nl">A</span> <span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'><span class="k">class</span> <span class="nl">B</span> <span class="p">:</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nl">SubNSObject</span> <span class="p">:</span> <span class="bp">NSObject</span> <span class="p">{}</span>
-</span><span class='line'><span class="k">class</span> <span class="n">NotSubbed</span> <span class="p">{}</span>
-</span><span class='line'><span class="k">enum</span> <span class="n">SomeEnum</span> <span class="p">{</span> <span class="k">case</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">;</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">extension</span> <span class="n">A</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">YinA</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">func</span> <span class="n">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">A</span> <span class="p">{</span> <span class="k">return</span> <span class="n">A</span><span class="p">();</span> <span class="p">}</span>
-</span><span class='line'>    <span class="k">func</span> <span class="n">g</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">func</span> <span class="n">h</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">NotSubbed</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'><span class="k">func</span> <span class="n">j</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SomeEnum</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'><span class="k">func</span> <span class="n">k</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="k">inout</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">extension</span> <span class="n">B</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="c1">// THESE OVERIDES DO COMPILE:</span>
-</span><span class='line'>    <span class="kr">override</span> <span class="k">var</span>  <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">YinB</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>    <span class="kr">override</span> <span class="k">func</span> <span class="n">f</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">A</span> <span class="p">{</span> <span class="k">return</span> <span class="n">A</span><span class="p">();</span> <span class="p">}</span>
-</span><span class='line'>    <span class="kr">override</span> <span class="k">func</span> <span class="n">g</span><span class="p">(</span><span class="nl">val</span><span class="p">:</span> <span class="n">SubNSObject</span><span class="p">,</span> <span class="nl">test</span><span class="p">:</span> <span class="n">Bool</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">// THESE OVERIDES DO NOT COMPILE:</span>
-</span><span class='line'><span class="c1">//override func h(val: NotSubbed, test: Bool = false) { }</span>
-</span><span class='line'><span class="c1">//override func j(val: SomeEnum) { }</span>
-</span><span class='line'><span class="c1">//override func k(val: SubNSObject, inout test: Bool) { }</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<h4>例子2</h4>
-
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nl">B</span> <span class="p">:</span> <span class="n">A</span> <span class="p">{</span> <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">extension</span> <span class="n">A</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="p">@</span><span class="n">objc</span> <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">YinA</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">extension</span> <span class="n">B</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>   <span class="p">@</span><span class="n">objc</span> <span class="kr">override</span> <span class="k">var</span> <span class="nl">y</span> <span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">YinB</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Swift Method]]></title>
@@ -570,6 +425,154 @@ while let constantName = someOptional
 
 <pre><code>var storyboardName : String! = "hello"
 </code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Swift中的类型转换]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift/"/>
+    <updated>2015-06-11T11:34:01+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift</id>
+    <content type="html"><![CDATA[<p>Swift中使用<code>as</code>和<code>is</code>运算符来进行类型转换</p>
+
+<!--more-->
+
+
+<h4>一个类继承的例子</h4>
+
+<pre><code>class MediaItem{
+}
+
+class Movie: MediaItem{
+    var director : String
+    init(director: String){ self.director = director; super.init() }
+
+}
+
+class Song: MediaItem{
+    var artist : String
+    init(artist: String){ self.artist = artist; super.init() }
+}
+</code></pre>
+
+<h4>类型检查使用<code>is</code></h4>
+
+<pre><code>let library = [Movie("d1"), Song("a1"), Song("a2"), Movie("d2")]
+
+var movieCount = 0
+var songCount = 0
+
+for item in library {
+    if item as Movie {
+        ++movieCount
+    } else if item is Song {
+        ++songCount
+    }
+}
+</code></pre>
+
+<p>值得一提的是，<code>is</code>不仅仅用来检测有继承关系的类，而且可以用来检测是否实现了某个接口</p>
+
+<pre><code>protocal HasArea{
+    var area: Double { get }
+}
+
+class Circle: HasArea{
+    var radius: Double
+    var area: Double { return 3.14 * radius * radius }
+    init(radius: Double){ self.radius = radius }
+}
+
+var circle = Circle(2.5)
+if circle is HasArea {
+    println("Area: \(circle.area)")
+}
+</code></pre>
+
+<h4>类型转换</h4>
+
+<p>可以使用<code>as</code>来进行类型转换</p>
+
+<p>可以用两种方式来使用<code>as</code>, <code>as?</code>和<code>as!</code></p>
+
+<p><code>as?</code>表示不确定该转换是否能成功，<code>as!</code>表示一定会成功，但是如果运行时转换失败的话，程序会崩掉</p>
+
+<pre><code>for item in library {
+    if let movie = item as? Movie {
+        println("Director: \(movie.director)")
+    } else if let song = item as? Song {
+        println("Artist: \(song.artist)")
+    }
+}
+</code></pre>
+
+<h4><code>Any</code>和<code>AnyObject</code>的类型转换</h4>
+
+<p>其实，<code>Any</code>和<code>AnyObject</code>的转换和普通的类型转换是一样的。值得说的是为什么swift要有他们两个。</p>
+
+<ul>
+<li><code>AnyObject</code>可以代表任何class类型的实例</li>
+<li><code>Any</code>却可以代表任何类型的实例，包括funtion类型</li>
+</ul>
+
+
+<p>举两个例子，第一个例子</p>
+
+<pre><code>let someObjects: [AnyObject] = [Movie('d1'),Movie('d1'),Movie('d1')]
+for object in someObjects{
+    let movie = object as! Movie
+    println("Movie director: \(movie.director)")
+}
+</code></pre>
+
+<p>该例子中，还可以直接cast整个数组</p>
+
+<pre><code>for movie in someObjects as! [Movie] {
+    println("Movie director: \(movie.director)")
+}
+</code></pre>
+
+<p>另外一个是关于<code>Any</code>的例子</p>
+
+<pre><code>var things = [Any]()
+
+things.append(0)
+things.append(0.0)
+things.append(42)
+things.append(3.14)
+things.append("hello")
+things.append((3.0, 5.0))
+things.append(Movie("d1"))
+things.append({(name: String) -&gt; String in 
+    "Hello, \(name)" })
+
+for thing in things{
+    switch thing{
+        case 0 as Int: 
+            println("zero as an Int")
+        case 0 as Double:
+            println("zero as an Double")
+        case let someInt as Int:
+            println("an integer value of \(someInt)")
+        case let someDouble as Double where someDouble &gt; 0:
+            println("a positive double : \(someDouble)")
+        case is Double:
+            println("some other double value &lt;= 0")
+        case let someString as String:
+            println("a string value : \(someString)")
+        case let (x, y) as (Double, Double) :
+            println("an (x,y) point at \(x), \(y)")
+        case let movie as Movie:
+            println("a movie director: \(movie.director)")
+        case let stringConverter as String -&gt; String:
+            println(stringConverter("Michael")
+        default:
+            println("something else")
+    }
+}
+</code></pre>
+
+<p>需要指出，在switch的case语句中，使用的<code>as</code>是强制转换版的，并不写作<code>as?</code>或者<code>as!</code>，在case语句中使用这种检查总是安全的。</p>
 ]]></content>
   </entry>
   

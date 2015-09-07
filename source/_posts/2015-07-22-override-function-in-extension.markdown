@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title: "到底能不能在extension里override一个函数？"
@@ -16,9 +17,10 @@ Swift教程中明确说了，extension并不能override一个已有的函数！�
 
 至少在目前版本（swift1.1， 1.2），只要在如下两种情况下就可以override函数
 
-* 涉及到的类都是从NSObject继承来的
-* 不使用inout修饰符
+* 涉及到的类都是从NSObject继承来的,不使用inout修饰符并且没有enum
 * 或者使用了@objc修饰符的函数
+
+核心思想是，只有*Objective-C compatible*的方法和属性才能在extension里override
 
 请参考下面的例子
 

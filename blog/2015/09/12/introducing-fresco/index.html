@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fresco 简介 - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="翻译自Introducing Fresco: A new image library for Android 这里并不是单纯的翻译，只是试图总结一下fresco的特点 fresco是facebook开源的管理图片的库，主要还是为了管理里图片使用的内存 不同的内存区域 对于Android来说， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/09/12/introducing-fresco">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Fresco 简介</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-12T17:42:18+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:42 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>翻译自<a href="https://code.facebook.com/posts/366199913563917/introducing-fresco-a-new-image-library-for-android/">Introducing Fresco: A new image library for Android</a></p>
+
+<p>这里并不是单纯的翻译，只是试图总结一下fresco的特点</p>
+
+<!--more-->
+
+
+<p>fresco是facebook开源的管理图片的库，主要还是为了管理里图片使用的内存</p>
+
+<h4>不同的内存区域</h4>
+
+<p>对于Android来说，可以使用的内存区域包括:</p>
+
+<ul>
+<li><code>java heap</code></li>
+<li><code>native heap</code></li>
+<li><code>ashmem</code></li>
+</ul>
+
+
+<p><code>ashmem</code>非常像<code>native heap</code>，但是有趣的是，它可以<code>pin/unpin</code>。所谓的<code>unpin</code>其实就是lazy free。也就是说，仅仅当Android需要更多内存的时候，才会释放这块内存。当Android重新<code>pin</code>这块内存时，如果这块内存不曾被是放过的话，那么原来的数据还在那里。</p>
+
+<h4>Purgeable bitmaps</h4>
+
+<p><code>ashmem</code>并不能被java应用直接访问，除了一些特殊情况，恰好，图片就是其中的一个。当你创建一个解码过的图片，<code>bitmap</code>，api允许你指定这个图片是<code>purgeable</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">BitmapFactory</span><span class="o">.</span><span class="na">Options</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BitmapFactory</span><span class="o">.</span><span class="na">Options</span><span class="o">();</span>
+</span><span class='line'><span class="n">options</span><span class="o">.</span><span class="na">inPurgeable</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'><span class="n">Bitmap</span> <span class="n">bitmap</span> <span class="o">=</span> <span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeByteArray</span><span class="o">(</span><span class="n">jpeg</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">jpeg</span><span class="o">.</span><span class="na">length</span><span class="o">,</span> <span class="n">options</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Purgeable的bitmap就在ashmem里。然而，garbage collector并不自动回收这些内存。Android系统只是在渲染系统渲染的时候<code>pin</code>住这些内存，然后在渲染结束后<code>unpin</code>他们。如果这些<code>unpined</code>图片需要再次被渲染的话，Android就会重新取得需要的内容，如果有必要的话，会重新在线(on the fly)解码。</p>
+
+<p>但是在线解码(on the fly decode)发生在主线程里，由于这个原因，Google并不建议使用这个特性。目前的建议是使用<code>inBitmap</code>。但是这个新标志只有在android3.0里才存在。此外在4.4之前，这个特性还有个限制，是要求新解压的图片和原来的图片的大小要一致。这个要求显然并不适合大多数场景。</p>
+
+<h4>鱼和熊掌可以兼得</h4>
+
+<p>我们发现了一个既可以不用频繁释放／分配内存，又可以不阻塞UI的办法。也就是说，如果我们事先在非UI线程pin好一块内存，然后只要永远不要unpin它，这样我们就在ashmem上得到了一块内存，但是却不会引起UI阻塞的问题。非常幸运，我们NDK中有一个函数就是干这个的，<code>AdnroidBitmap_lockPixels</code>。这个函数设计之初是用来和<code>unlockPixels</code>配合使用来unpin这块内存的。当我们故意调用lockPixels但是并不调用unlockPixels时候，我们就很安全的在Java Heap之外得到了一块并不阻塞UI线程的内存。</p>
+
+<h4>像C++一样思考</h4>
+
+<p>ashmem没有类似garbage collector来保证不会内存泄漏。所以我们需要自己来保证。</p>
+
+<p>在C++里，通常的解决办法是使用smart pointer类来实现引用计数。但这使用了cpp语言的工具，copy constructor，assignment constructor，deterministic destructor。这些语法糖在java中并不存在。所以我们自己要实现类似的机制。</p>
+
+<p>我们通过两个类来实现这个机制。一个叫做<code>SharedReference</code>。这个类有两个方法，一个是<code>addReference</code>，一个是<code>deleteReferece</code>。通过这个来实现引用计数。</p>
+
+<p>当然这个对于java程序员来说，明显很容易出错。java语言设计的时候就是要避免这样做。所以在<code>SharedReference</code>顶上，我们设计了<code>CloseableReference</code>。它是现实了<code>Closeable</code>接口，并且也实现了<code>cloneabel</code>。在构造函数和<code>clone()</code>里我们调用<code>addReferece()</code>。在<code>close()</code>里，我们调用<code>deleteReference()</code>。所以java开发者只需要遵循两个原则：</p>
+
+<ul>
+<li>给一个CloseableReference赋值时候，调<code>.clone()</code>。</li>
+<li>离开作用域时，调用<code>.close()</code>，通常是在一个final块里。</li>
+</ul>
+
+
+<h4>它不仅仅是一个loader，更是一个pipeline</h4>
+
+<p><img class="center" src="/images/fresco/fresco_imagepipeline.png" width="273"></p>
+
+<p>在移动设备上显示一张图片要涉及很多步骤，如果我们把这些步骤看作是<code>pipeline</code>而不是<code>loader</code>，那么事情会完全不一样。每一步都应该尽可能的独立于其他步骤，每一步获得一些参数的输入，而产出一些结果。一些可能需要可以并行，一些需要串行。有一些仅仅需要在一些特定条件下执行，有一些对执行他们的线程有特定要求。而且考虑到弱网络和大图片，我们希望用户可以尽可能快的看到图片，即使是图片并没有完全下载下来。</p>
+
+<p>对于Java来说，一般异步代码同步的时候我们会用到<code>Future</code>。但Future只能在执行完毕的时候带回来一个结果。当我们处理大图片的时候，我们需要处理一系列的结果。</p>
+
+<p>我们的解决办法是涉及一个泛化版的Future，<code>DataSource</code>。它提供一个订阅的方法，调用者必须传递一个<code>DataSubscriber</code>和<code>Executor</code>给它。DataSubscriber将会收到DataSource发来的中间结果或者是最终结果的通知，并且会提供一个简单的办法去区分这两者。</p>
+
+<p>在底层，上图里的每一个盒子都是使用一个新的架构实现的，叫做Producer/Consumer。这个架构是学习<code>ReactiveX</code>架构而搭建的。整个接口非常简洁，<code>Producer</code>只有一个方法，<code>produceResults</code>，它只有一个参数是<code>Consumer</code>对象。相对应的，<code>Consumer</code>只有一个方法叫做<code>onNewResult</code>。</p>
+
+<p>我们使用一个向下面这样的一个系统来使producters变成一个链条。假设我们有一个producer，它的工作就是把类型I变成类型O。看起来如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OutputProducer</span><span class="o">&lt;</span><span class="n">I</span><span class="o">,</span> <span class="n">O</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="n">Producer</span><span class="o">&lt;</span><span class="n">O</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">final</span> <span class="n">Producer</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">mInputProducer</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">OutputProducer</span><span class="o">(</span><span class="n">Producer</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">inputProducer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">mInputProducer</span> <span class="o">=</span> <span class="n">inputProducer</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">produceResults</span><span class="o">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">O</span><span class="o">&gt;</span> <span class="n">outputConsumer</span><span class="o">,</span> <span class="n">ProducerContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">inputConsumer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">InputConsumer</span><span class="o">(</span><span class="n">outputConsumer</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">mInputProducer</span><span class="o">.</span><span class="na">produceResults</span><span class="o">(</span><span class="n">inputConsumer</span><span class="o">,</span> <span class="n">context</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InputConsumer</span> <span class="kd">implements</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">O</span><span class="o">&gt;</span> <span class="n">mOutputConsumer</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">InputConsumer</span><span class="o">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">O</span><span class="o">&gt;</span> <span class="n">outputConsumer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">mOutputConsumer</span> <span class="o">=</span> <span class="n">outputConsumer</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewResult</span><span class="o">(</span><span class="n">I</span> <span class="n">newResult</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">isLast</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">O</span> <span class="n">output</span> <span class="o">=</span> <span class="n">doActualWork</span><span class="o">(</span><span class="n">newResult</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">mOutputConsumer</span><span class="o">.</span><span class="na">onNewResult</span><span class="o">(</span><span class="n">output</span><span class="o">,</span> <span class="n">isLast</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个设计使得我们可以组建一个非常复杂的工作步骤链条，但是却能保证每一步逻辑上的独立性。</p>
+
+<h4>动画－－从一到多</h4>
+
+<p>表情一般来说是GIF或者WebP格式的，这带来了挑战，一个动画由许多bitmap组成，每一个都需要解码，存储和显示。对于大的动画来说，在内存中存储每一帧显然是不可能的。</p>
+
+<p>所以我们设计了<code>AnimatedDrawable</code>，实现了Android的<code>Animatable</code>接口，可以支持以上两种格式，并且我们做了优化，如果比较小，我们可以把所有帧放在内存中，否则我们在线解码。不过这些都是高度可定制的</p>
+
+<h4>关于Drawee</h4>
+
+<p>我们以前的实现使用了View，当图片下载好之后把一个placeholder的View和交换，但是这样效率不高，因为换View会引起Android重新计算整个layout pass。所以一个更合理的做法是使用Android的Drawable，它可以实时交换而不引起任何其他代价。</p>
+
+<p>所以我们引入了<code>Drawee</code>。这个MVC类似的架构用来显示图片。Modal叫做<code>DraweeHierarchy</code>，它由有层次的Drawable组成，每一个实现特定的功能，imaging，layering，fade-in，scaling等。</p>
+
+<p><code>DraweeControllers</code>连接image pipeline和处理image后台的操作。它从pipeline收到通知，然后决定怎么处理结果。它决定了DrawHierarchy实际显示了什么，不论是placeholder，错误，或者准备好的图片。</p>
+
+<p><code>DraweeViews</code>仅仅有非常有限的功能，但是它提供的功能却是决定性的。它接受Android系统的事件来发出信号说，这个view是不是还在屏幕上显示。当不在屏幕上的时候，DraweeView可以让DraweeController释放被图片使用资源。同时如果这个图片还没有下载的话，它可以取消，这样就可以节约网络带宽的使用。</p>
+
+<p><code>完</code></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-09-12T17:42:18+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:42 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/fresco/'>fresco</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/09/12/introducing-fresco/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/09/12/introducing-fresco/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/" title="Previous Post: 新Android Gradle Build Tools: Gradle 2.5">&laquo; 新Android Gradle Build Tools: Gradle 2.5</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

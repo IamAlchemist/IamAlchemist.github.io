@@ -9,7 +9,8 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="关于optional，最需要说的是为什么需要optional，比如说在objctive-c中就没有，也是可以表示一个不存在的对象的。只需要用NULL就可以了。但是如何表示一个不存在的value类型的变量呢？比如一个不存在的struture？objective-c就没有太好的办法了， &hellip;">
+  <meta name="description" content="extensions可以给已有的type增加功能，而且不必访问源代码(retroactive modeling) extensions可以 增加computed property和computed static property
+定义instance methods和type methods &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +79,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/17/swift-extension/">Swift Extension</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-17T07:45:07+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:45 am</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>extensions</code>可以给已有的type增加功能，而且不必访问源代码(<code>retroactive modeling</code>)</p>
+
+<p><code>extensions</code>可以</p>
+
+<ul>
+<li>增加<code>computed property</code>和<code>computed static property</code></li>
+<li>定义<code>instance methods</code>和<code>type methods</code></li>
+<li>提供新的<code>initializers</code></li>
+<li>定义<code>subscripts</code></li>
+<li>定义和使用新的<code>nested types</code></li>
+<li>为一个<code>type</code>实现一个<code>protocol</code></li>
+</ul>
+
+
+<p><code>extension</code>不可以</p>
+
+<ul>
+<li><code>extension</code>可以增加新的<code>funtionality</code>，但是不能覆盖以有的<code>functionality</code></li>
+<li><code>extension</code>不能增加<code>stored properties</code>，或者给存在的<code>property</code>增加<code>property observers</code></li>
+<li><code>extension</code>不能增加新的<code>designated initializer</code></li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/17/swift-extension/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -388,39 +445,6 @@
 </code></pre>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/18/whats-cookie/">What&#8217;s Cookie</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-18T10:45:25+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:45 am</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"></div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/18/whats-cookie/">Read on &rarr;</a>
-    </footer>
   
 
 

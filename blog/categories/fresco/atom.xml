@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Fresco | My Octopress Blog]]></title>
   <link href="http://IamAlchemist.github.io/blog/categories/fresco/atom.xml" rel="self"/>
   <link href="http://IamAlchemist.github.io/"/>
-  <updated>2015-09-15T08:28:26+08:00</updated>
+  <updated>2015-09-15T14:06:28+08:00</updated>
   <id>http://IamAlchemist.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -86,7 +86,7 @@
 
 <h4>它不仅仅是一个loader，更是一个pipeline</h4>
 
-<p><img class="center" src="/images/fresco/fresco_imagepipeline.png" width="273"></p>
+<p><img class="center" src="/images/fresco/fresco_imagepipeline.png" width="600"></p>
 
 <p>在移动设备上显示一张图片要涉及很多步骤，如果我们把这些步骤看作是<code>pipeline</code>而不是<code>loader</code>，那么事情会完全不一样。每一步都应该尽可能的独立于其他步骤，每一步获得一些参数的输入，而产出一些结果。一些可能需要可以并行，一些需要串行。有一些仅仅需要在一些特定条件下执行，有一些对执行他们的线程有特定要求。而且考虑到弱网络和大图片，我们希望用户可以尽可能快的看到图片，即使是图片并没有完全下载下来。</p>
 

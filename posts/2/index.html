@@ -9,8 +9,7 @@
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="extensions可以给已有的type增加功能，而且不必访问源代码(retroactive modeling) extensions可以 增加computed property和computed static property
-定义instance methods和type methods &hellip;">
+  <meta name="description" content="optinal chainging是一个查询和调用optional的property, method, subscript的过程。如果其中的optional没有nil，那么表达式求值成功。否则，失败。失败后返回nil。所以整个表达式返回值始终是optional类型。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +78,41 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/17/swift-optional-chaining/">Swift Optional Chaining</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-17T09:19:59+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:19 am</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>optinal chainging</code>是一个查询和调用<code>optional</code>的property, method, subscript的过程。如果其中的<code>optional</code>没有nil，那么表达式求值成功。否则，失败。失败后返回nil。所以整个表达式返回值始终是<code>optional</code>类型。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/17/swift-optional-chaining/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -408,43 +442,6 @@
     <footer>
       <a rel="full-article" href="/blog/2014/11/25/process-in-android/">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/">How to Package the .so Lib in Android Studio</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-24T11:09:59+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:09 am</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>change build.Gradle like this:</p>
-
-<pre><code>sourceSets {  
-    main {  
-        jniLibs.srcDirs = ['libs']  
-    }  
-}   
-</code></pre>
-</div>
-  
   
 
 

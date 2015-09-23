@@ -59,7 +59,7 @@ ashmem没有类似garbage collector来保证不会内存泄漏。所以我们需
 
 ####它不仅仅是一个loader，更是一个pipeline
 
-{% img center /images/fresco/fresco_imagepipeline.png 273 %}
+{% img center /images/fresco/fresco_imagepipeline.png 600 %}
 
 在移动设备上显示一张图片要涉及很多步骤，如果我们把这些步骤看作是`pipeline`而不是`loader`，那么事情会完全不一样。每一步都应该尽可能的独立于其他步骤，每一步获得一些参数的输入，而产出一些结果。一些可能需要可以并行，一些需要串行。有一些仅仅需要在一些特定条件下执行，有一些对执行他们的线程有特定要求。而且考虑到弱网络和大图片，我们希望用户可以尽可能快的看到图片，即使是图片并没有完全下载下来。
 

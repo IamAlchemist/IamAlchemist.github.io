@@ -1,22 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  
-  
   <url>
-    <loc>http://IamAlchemist.github.io/blog/archives/</loc>
-    <lastmod>2014-09-14T22:26:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <loc>http://IamAlchemist.github.io/blog/2015/11/19/understanding-the-objective-c-runtime/</loc>
+    <lastmod>2015-11-19T13:35:18+08:00</lastmod>
   </url>
-  
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/09/18/basic-introduction-of-jni/</loc>
+    <lastmod>2015-09-18T14:57:30+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/09/12/introducing-fresco/</loc>
+    <lastmod>2015-09-12T17:42:18+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/09/07/new-android-gradle-build-tools-the-new-dsl-structure-and-gradle-2-dot-5/</loc>
+    <lastmod>2015-09-07T16:22:45+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/22/create-universal-framework/</loc>
+    <lastmod>2015-07-22T19:45:58+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/22/override-function-in-extension/</loc>
+    <lastmod>2015-07-22T00:00:00+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/16/working-with-auto-layout-programmatically/</loc>
+    <lastmod>2015-07-16T14:15:18+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/14/creating-custom-container-view-controllers/</loc>
+    <lastmod>2015-07-14T15:14:19+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/13/how-to-use-messenger/</loc>
+    <lastmod>2015-07-13T14:24:16+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android/</loc>
+    <lastmod>2015-07-12T13:11:59+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/17/swift-method/</loc>
+    <lastmod>2015-06-17T12:42:28+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/17/swift-optional-chaining/</loc>
+    <lastmod>2015-06-17T09:19:59+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/17/swift-extension/</loc>
+    <lastmod>2015-06-17T07:45:07+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/12/swift-optional/</loc>
+    <lastmod>2015-06-12T15:37:14+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift/</loc>
+    <lastmod>2015-06-11T11:34:01+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/10/swift-initialization/</loc>
+    <lastmod>2015-06-10T11:22:46+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/06/09/shi-yong-swiftsheng-cheng-frameworks/</loc>
+    <lastmod>2015-06-09T19:04:02+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/05/06/memory-churn/</loc>
+    <lastmod>2015-05-06T13:46:43+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/05/05/android-preformace-2-detect-memory-leak/</loc>
+    <lastmod>2015-05-05T20:42:43+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2015/05/04/android-performance-patther-1/</loc>
+    <lastmod>2015-05-04T20:32:24+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/11/25/process-in-android/</loc>
+    <lastmod>2014-11-25T10:24:54+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/11/24/how-to-package-the-so-lib-in-android-studio/</loc>
+    <lastmod>2014-11-24T11:09:59+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/11/18/whats-cookie/</loc>
+    <lastmod>2014-11-18T10:45:25+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/10/30/how-to-lock-the-screen-in-mac/</loc>
+    <lastmod>2014-10-30T16:46:20+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/10/27/the-core-objects-for-app/</loc>
+    <lastmod>2014-10-27T14:20:29+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/10/24/a-glance-at-app-design-pattern/</loc>
+    <lastmod>2014-10-24T18:09:53+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax/</loc>
+    <lastmod>2014-09-29T22:35:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/2014/09/29/how-to-publish-the-blog/</loc>
+    <lastmod>2014-09-29T21:37:35+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/404.html</loc>
+    <lastmod>2015-11-20T19:47:19+08:00</lastmod>
+  </url>
   <url>
     <loc>http://IamAlchemist.github.io/</loc>
-    <lastmod>2014-09-14T22:26:03+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2015-11-20T19:47:19+08:00</lastmod>
   </url>
-  
-  
-  
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/archives/</loc>
+    <lastmod>2015-11-20T19:47:19+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://IamAlchemist.github.io/blog/categories/</loc>
+    <lastmod>2015-11-20T19:47:19+08:00</lastmod>
+  </url>
 </urlset>

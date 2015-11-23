@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Swift中的类型转换 - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="Swift中使用as和is运算符来进行类型转换 一个类继承的例子 class MediaItem{
+} class Movie: MediaItem{ var director : String init(director: String){ self.director = director; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Swift中的类型转换</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-06-11T11:34:01+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:34 am</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Swift中使用<code>as</code>和<code>is</code>运算符来进行类型转换</p>
+
+<!--more-->
+
+
+<h4>一个类继承的例子</h4>
+
+<pre><code>class MediaItem{
+}
+
+class Movie: MediaItem{
+    var director : String
+    init(director: String){ self.director = director; super.init() }
+
+}
+
+class Song: MediaItem{
+    var artist : String
+    init(artist: String){ self.artist = artist; super.init() }
+}
+</code></pre>
+
+<h4>类型检查使用<code>is</code></h4>
+
+<pre><code>let library = [Movie("d1"), Song("a1"), Song("a2"), Movie("d2")]
+
+var movieCount = 0
+var songCount = 0
+
+for item in library {
+    if item as Movie {
+        ++movieCount
+    } else if item is Song {
+        ++songCount
+    }
+}
+</code></pre>
+
+<p>值得一提的是，<code>is</code>不仅仅用来检测有继承关系的类，而且可以用来检测是否实现了某个接口</p>
+
+<pre><code>protocal HasArea{
+    var area: Double { get }
+}
+
+class Circle: HasArea{
+    var radius: Double
+    var area: Double { return 3.14 * radius * radius }
+    init(radius: Double){ self.radius = radius }
+}
+
+var circle = Circle(2.5)
+if circle is HasArea {
+    println("Area: \(circle.area)")
+}
+</code></pre>
+
+<h4>类型转换</h4>
+
+<p>可以使用<code>as</code>来进行类型转换</p>
+
+<p>可以用两种方式来使用<code>as</code>, <code>as?</code>和<code>as!</code></p>
+
+<p><code>as?</code>表示不确定该转换是否能成功，<code>as!</code>表示一定会成功，但是如果运行时转换失败的话，程序会崩掉</p>
+
+<pre><code>for item in library {
+    if let movie = item as? Movie {
+        println("Director: \(movie.director)")
+    } else if let song = item as? Song {
+        println("Artist: \(song.artist)")
+    }
+}
+</code></pre>
+
+<h4><code>Any</code>和<code>AnyObject</code>的类型转换</h4>
+
+<p>其实，<code>Any</code>和<code>AnyObject</code>的转换和普通的类型转换是一样的。值得说的是为什么swift要有他们两个。</p>
+
+<ul>
+<li><code>AnyObject</code>可以代表任何class类型的实例</li>
+<li><code>Any</code>却可以代表任何类型的实例，包括funtion类型</li>
+</ul>
+
+
+<p>举两个例子，第一个例子</p>
+
+<pre><code>let someObjects: [AnyObject] = [Movie('d1'),Movie('d1'),Movie('d1')]
+for object in someObjects{
+    let movie = object as! Movie
+    println("Movie director: \(movie.director)")
+}
+</code></pre>
+
+<p>该例子中，还可以直接cast整个数组</p>
+
+<pre><code>for movie in someObjects as! [Movie] {
+    println("Movie director: \(movie.director)")
+}
+</code></pre>
+
+<p>另外一个是关于<code>Any</code>的例子</p>
+
+<pre><code>var things = [Any]()
+
+things.append(0)
+things.append(0.0)
+things.append(42)
+things.append(3.14)
+things.append("hello")
+things.append((3.0, 5.0))
+things.append(Movie("d1"))
+things.append({(name: String) -&gt; String in 
+    "Hello, \(name)" })
+
+for thing in things{
+    switch thing{
+        case 0 as Int: 
+            println("zero as an Int")
+        case 0 as Double:
+            println("zero as an Double")
+        case let someInt as Int:
+            println("an integer value of \(someInt)")
+        case let someDouble as Double where someDouble &gt; 0:
+            println("a positive double : \(someDouble)")
+        case is Double:
+            println("some other double value &lt;= 0")
+        case let someString as String:
+            println("a string value : \(someString)")
+        case let (x, y) as (Double, Double) :
+            println("an (x,y) point at \(x), \(y)")
+        case let movie as Movie:
+            println("a movie director: \(movie.director)")
+        case let stringConverter as String -&gt; String:
+            println(stringConverter("Michael")
+        default:
+            println("something else")
+    }
+}
+</code></pre>
+
+<p>需要指出，在switch的case语句中，使用的<code>as</code>是强制转换版的，并不写作<code>as?</code>或者<code>as!</code>，在case语句中使用这种检查总是安全的。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-06-11T11:34:01+08:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:34 am</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>ios</a>, <a class='category' href='/blog/categories/swift/'>swift</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/06/11/typecastinginswift/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/10/swift-initialization/" title="Previous Post: swift initialization">&laquo; swift initialization</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/06/12/swift-optional/" title="Next Post: swift中optional">swift中optional &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Others | My Octopress Blog]]></title>
+  <link href="http://IamAlchemist.github.io/blog/categories/others/atom.xml" rel="self"/>
+  <link href="http://IamAlchemist.github.io/"/>
+  <updated>2015-11-20T19:47:19+08:00</updated>
+  <id>http://IamAlchemist.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Markdown Syntax]]></title>
+    <link href="http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax/"/>
+    <updated>2014-09-29T22:35:48+08:00</updated>
+    <id>http://IamAlchemist.github.io/blog/2014/09/29/mark-syntax</id>
+    <content type="html"><![CDATA[<pre><code>#h1
+###h3
+######h6
+
+&gt;this is a
+pargraph, haha
+
+* Red
+* Blue
+
+
+markdown paragraph .... between emtpy lines
+
+this is a paragraph
+
+this is a H1
+=
+
+this is a H2
+-
+
+*  This is a list item with two paragraphs. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+   mi posuere lectus.
+
+    Vestibulum enim wisi, viverra nec, fringilla in, laoreet
+    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
+        sit amet velit.
+
+2.  Suspendisse id sem consectetuer libero luctus adipiscing.
+
+****
+
+*thex*
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

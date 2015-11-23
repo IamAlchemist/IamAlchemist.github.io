@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>AIDL in Android - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="AIDL是用来跨进行通信的。在Android上，跨进程通信需要把对象解构成系统可以识别的基本类型，然后在交给另一个进程使用之前，需要重新组装起来。这些工作是十分枯燥的，AIDL就是为了这个目的而设计的。 注意：当且仅当你允许不同的App的clients需要跨进程来访问你的service， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">AIDL in Android</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-12T13:11:59+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:11 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>AIDL是用来跨进行通信的。在Android上，跨进程通信需要把对象解构成系统可以识别的基本类型，然后在交给另一个进程使用之前，需要重新组装起来。这些工作是十分枯燥的，AIDL就是为了这个目的而设计的。</p>
+
+<p><code>注意：当且仅当你允许不同的App的clients需要跨进程来访问你的service，并且需要在service里处理多线程问题的时候，你才应该使用AIDL。如果仅仅是App内部的client来访问服务，并且不需要IPC的话，只要使用Binder就好了。如果是需要IPC，但是不用处理并发的话，那么只要用Messager就好了。只有既要IPC，又要处理并发，才需要用AIDL。总之，只有在必须的时候才使用AIDL</code></p>
+
+<!--more-->
+
+
+<h3>关于AIDL调用的背后</h3>
+
+<p>另一个需要知道的是，AIDL的接口调用是直接调用，所以并不能对调用接口的线程有任何假设。调用的线程在本地进程执行还是在远程进程执行的结果可能是非常不同的。其中：</p>
+
+<ul>
+<li>如果是本地进程进行AIDL调用，服务端代码是在进行调用的这个线程中执行的</li>
+<li>如果是远程进程进行AIDL调用，你就必须为服务端代码同时在不同线程中执行做好准备，也就是说，这些代码必须是线程安全的</li>
+<li><code>oneway</code>关键字用来修饰远调用，使用后表示这个远程调用并不阻塞，它仅仅是发送了数据就立刻返回。而该关键字并不影响本地调用</li>
+</ul>
+
+
+<h3>创建AIDL过程</h3>
+
+<ul>
+<li>创建.aidl文件</li>
+</ul>
+
+
+<p>使用Android Studio自己创建IRemoteService.aidl就很好，比如定义接口getPid()</p>
+
+<pre><code>interface IRemoteService {
+    int getPid();
+}
+</code></pre>
+
+<ul>
+<li>实现该接口的service</li>
+</ul>
+
+
+<p>例如实现文件AIDLService.java，这个service在onBind函数中返回的binder里含有IRemoteService.aidl定义的接口的实现</p>
+
+<pre><code>public class AIDLService extends Service {
+
+    private final IRemoteService.Stub binder = new IRemoteService.Stub(){
+
+        @Override
+        public int getPid() throws RemoteException {
+            return android.os.Process.myPid();
+        }
+    };
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+}
+</code></pre>
+
+<ul>
+<li>使用该AIDL</li>
+</ul>
+
+
+<p>像使用普通service一样</p>
+
+<pre><code>IRemoteService remoteService;
+
+ServiceConnection remoteServiceConnection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        remoteService = IRemoteService.Stub.asInterface(iBinder);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        remoteService = null;
+    }
+};
+
+Intent intent = new Intent(MainActivity.this, AIDLService.class);
+bindService(intent, remoteServiceConnection, BIND_AUTO_CREATE);
+startService(intent);
+
+int remotePid = remoteService.getPid();
+</code></pre>
+
+<h3>在AIDL中传递对象</h3>
+
+<p>比如我们希望AIDL接口可以传递名为Student的对象,需要做以下一些事情</p>
+
+<ul>
+<li>定义Student.aidl</li>
+</ul>
+
+
+<p>其中声明Student类型</p>
+
+<pre><code>parcelable Student;
+</code></pre>
+
+<ul>
+<li>定义aidl接口（IRemoteAPI.aidl）</li>
+</ul>
+
+
+<p>注意要import相应的Student类</p>
+
+<pre><code>import com.morgenworks.alchemistli.remotelibrary.Student;
+
+interface IRemoteAPI {
+    Student getName();
+    void setName(in Student st);
+}
+</code></pre>
+
+<ul>
+<li>定义实现了Parcelble接口的Student类</li>
+</ul>
+
+
+<p>实现Parcelble接口需要实现这样几个函数, Student(Parcel source), writeToParcel(&hellip;), readescribeContents(), 以及static Creator<Student> CREATOR</p>
+
+<pre><code>public class Student implements Parcelable {
+    public String name;
+    public String fatherName;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(fatherName);
+    }
+
+    public Student(Parcel source){
+        name = source.readString();
+        fatherName = source.readString();
+    }
+
+    public Student(){}
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setFatherName(String fatherName){
+        this.fatherName = fatherName;
+    }
+
+    public static final Creator&lt;Student&gt; CREATOR = new Creator&lt;Student&gt;() {
+        @Override
+        public Student createFromParcel(Parcel source) {
+            return new Student(source);
+        }
+
+        @Override
+        public Student[] newArray(int size) {
+            return new Student[size];
+        }
+    };
+}
+</code></pre>
+
+<ul>
+<li>实现AIDL接口的服务</li>
+</ul>
+
+
+<p>就像实现普通的AIDL接口服务一样</p>
+
+<pre><code>public class RemoteAPIService extends Service {
+    private Student stuInfo;
+
+    private IRemoteAPI.Stub binder = new IRemoteAPI.Stub() {
+        @Override
+        public Student getName() throws RemoteException {
+            stuInfo.name = stuInfo.name.toUpperCase();
+            return stuInfo;
+        }
+
+        @Override
+        public void setName(Student st) throws RemoteException {
+            stuInfo = st;
+        }
+    };
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+}
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-12T13:11:59+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:11 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/07/12/aidl-in-android/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/17/swift-method/" title="Previous Post: Swift Method">&laquo; Swift Method</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/07/13/how-to-use-messenger/" title="Next Post: Android中如何使用Messenger">Android中如何使用Messenger &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

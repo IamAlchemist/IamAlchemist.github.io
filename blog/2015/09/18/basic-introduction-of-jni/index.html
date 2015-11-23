@@ -1,0 +1,884 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JNI基础介绍 - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="这里简单介绍一下JNI的语法 初识第一面 HelloJNI.java 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+public class HelloJNI { static { System.loadLibrary(&quot;hello&quot;); // Load &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/09/18/basic-introduction-of-jni">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">JNI基础介绍</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-18T14:57:30+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:57 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这里简单介绍一下JNI的语法</p>
+
+<p> <!-- more --></p>
+
+<h4>初识第一面</h4>
+
+<h5>HelloJNI.java</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloJNI</span> <span class="o">{</span>
+</span><span class='line'>   <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">);</span> <span class="c1">// Load native library at runtime</span>
+</span><span class='line'>                                   <span class="c1">// hello.dll (Windows) or libhello.so (Unixes)</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Declare a native method sayHello() that receives nothing and returns void</span>
+</span><span class='line'>   <span class="kd">private</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">sayHello</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Test Driver</span>
+</span><span class='line'>   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">new</span> <span class="nf">HelloJNI</span><span class="o">().</span><span class="na">sayHello</span><span class="o">();</span>  <span class="c1">// invoke the native method</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>HelloJNI.h/.c</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">Java_HelloJNI_sayHello</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello World!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>需要注意的有：</p>
+
+<ul>
+<li>函数命名约定 <code>Java_{package_and_classname}_{function_name}(JNI arguments)</code></li>
+<li>JNIEnv*: 对于JNI环境的引用, 通过这个入口可以进行jni函数</li>
+<li>jobject: 对于this对象的引用</li>
+</ul>
+
+
+<h4>JNI基础</h4>
+
+<p>JNI在native系统中定义了下面这些JNI数据类型，来对应Java的类型。</p>
+
+<ul>
+<li>Java基本类型：jint，jbyte，jshort，jlong，jfloat，jdouble，jchar，jboolean对应Java的int，byte，short，long，float，double，char，boolean</li>
+<li>Java应用类型：jobject对应java.lang.Object。同时还有一下子类型</li>
+<li>jclass -> java.lang.Class</li>
+<li>jstring -> java.lang.String</li>
+<li>jthrowable -> java.lang.Throwable</li>
+<li>jarray -> Java Array。也就是jintArray, jbyteArray, jshortArray, jlongArray, jfloatArray, jdoubleArray, jcharArray, jbooleanArray, jobjectArray.</li>
+</ul>
+
+
+<p>由于native的函数都是接受JNI类型参数，返回JNI类型参数，所以一般情况下我们需要这样做：</p>
+
+<ul>
+<li>把JNI的参数转换或者拷贝成C可以操作的类型，如jintArray到int[]</li>
+<li>使用C类型参数完成计算</li>
+<li>把结果转换或者拷贝成JNI类型并返回</li>
+</ul>
+
+
+<p>JNI环境提供了大量的这些转换工作的工具可以帮助大家完成</p>
+
+<h4>在Java和Nativie之间传递参数</h4>
+
+<h5>基础类型</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'>    <span class="c1">// In &quot;win\jni_mh.h&quot; - machine header which is machine dependent</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">long</span>            <span class="n">jint</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kr">__int64</span>         <span class="n">jlong</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">signed</span> <span class="kt">char</span>     <span class="n">jbyte</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// In &quot;jni.h&quot;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span>   <span class="n">jboolean</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">jchar</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">short</span>           <span class="n">jshort</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">float</span>           <span class="n">jfloat</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">double</span>          <span class="n">jdouble</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">jint</span>            <span class="n">jsize</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>String</h5>
+
+<p>JNI环境提供了函数可以进行很方便的转换</p>
+
+<ul>
+<li>jstring -> char* : <code>const char* GetStringUTFChars(JNIEnv*, jstring, jboolean*)</code>.</li>
+<li>char* -> jstring : <code>jstring NewStringUTF(JNIEnv*, char*)</code>.</li>
+</ul>
+
+
+<p>例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIString_sayHello</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jstring</span> <span class="n">inJNIStr</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Step 1: Convert the JNI String (jstring) into C-String (char*)</span>
+</span><span class='line'>   <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">inCStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIStr</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">inCSt</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Step 2: Perform its intended operations</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the received string is: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">inCStr</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIStr</span><span class="p">,</span> <span class="n">inCStr</span><span class="p">);</span>  <span class="c1">// release resources</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Prompt user for a C-string</span>
+</span><span class='line'>   <span class="kt">char</span> <span class="n">outCStr</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enter a String: &quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">outCStr</span><span class="p">);</span>    <span class="c1">// not more than 127 characters</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Step 3: Convert the C-string (char*) into JNI String (jstring) and return</span>
+</span><span class='line'>   <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">outCStr</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>primitive数组</h5>
+
+<ul>
+<li>jintArray -> jint[], <code>jint* GetIntArrayElements(JNIEnv *env, jintArray a, jboolean *iscopy)</code>.</li>
+<li>jint[] -> jintArray, 首先分配内存<code>jintArray NewIntArray(JNIEnv *env, jsize len)</code>, 然后填充<code>void SetIntArrayRegion(JNIEnv *env, jintArray a, jsize start, jsize len, const jint *buf)</code></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jdoubleArray</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIPrimitiveArray_sumAndAverage</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jintArray</span> <span class="n">inJNIArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Step 1: Convert the incoming JNI jintarray to C&#39;s jint[]</span>
+</span><span class='line'>   <span class="n">jint</span> <span class="o">*</span><span class="n">inCArray</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntArrayElements</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIArray</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">inCArray</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jsize</span> <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetArrayLength</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIArray</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Step 2: Perform its intended operations</span>
+</span><span class='line'>   <span class="n">jint</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">inCArray</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="n">jdouble</span> <span class="n">average</span> <span class="o">=</span> <span class="p">(</span><span class="n">jdouble</span><span class="p">)</span><span class="n">sum</span> <span class="o">/</span> <span class="n">length</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">ReleaseIntArrayElements</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIArray</span><span class="p">,</span> <span class="n">inCArray</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// release resources</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">jdouble</span> <span class="n">outCArray</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="n">sum</span><span class="p">,</span> <span class="n">average</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Step 3: Convert the C&#39;s Native jdouble[] to JNI jdoublearray, and return</span>
+</span><span class='line'>   <span class="n">jdoubleArray</span> <span class="n">outJNIArray</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewDoubleArray</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// allocate</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">outJNIArray</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleArrayRegion</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">outJNIArray</span><span class="p">,</span> <span class="mi">0</span> <span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">outCArray</span><span class="p">);</span>  <span class="c1">// copy</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">outJNIArray</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>访问对象变量并且调用Java方法</h5>
+
+<p><em>访问实例对象</em></p>
+
+<ul>
+<li>GetObjectID</li>
+<li>GetFieldID</li>
+<li>GetInt</li>
+<li>SetFieldID</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIInstanceVariable_modifyInstanceVariable</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Get a reference to this object&#39;s class</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">thisClass</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// int</span>
+</span><span class='line'>   <span class="c1">// Get the Field ID of the instance variables &quot;number&quot;</span>
+</span><span class='line'>   <span class="n">jfieldID</span> <span class="n">fidNumber</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span> <span class="s">&quot;number&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">fidNumber</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the int given the Field ID</span>
+</span><span class='line'>   <span class="n">jint</span> <span class="n">number</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">fidNumber</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the int is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Change the variable</span>
+</span><span class='line'>   <span class="n">number</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">fidNumber</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the Field ID of the instance variables &quot;message&quot;</span>
+</span><span class='line'>   <span class="n">jfieldID</span> <span class="n">fidMessage</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span> <span class="s">&quot;message&quot;</span><span class="p">,</span> <span class="s">&quot;Ljava/lang/String;&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">fidMessage</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// String</span>
+</span><span class='line'>   <span class="c1">// Get the object given the Field ID</span>
+</span><span class='line'>   <span class="n">jstring</span> <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">fidMessage</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Create a C-string with the JNI String</span>
+</span><span class='line'>   <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">cStr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the string is %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">cStr</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">cStr</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Create a new C-string and assign to the JNI string</span>
+</span><span class='line'>   <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;Hello from C&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">message</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// modify the instance variables</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetObjectField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">fidMessage</span><span class="p">,</span> <span class="n">message</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>访问静态变量</em></p>
+
+<ul>
+<li>GetStaticFieldID</li>
+<li>GetStatic<type>Field</li>
+<li>SetStatic<type>Field</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIStaticVariable_modifyStaticVariable</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Get a reference to this object&#39;s class</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Read the int static variable and modify its value</span>
+</span><span class='line'>   <span class="n">jfieldID</span> <span class="n">fidNumber</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStaticFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&quot;number&quot;</span><span class="p">,</span> <span class="s">&quot;D&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">fidNumber</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jdouble</span> <span class="n">number</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStaticDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">fidNumber</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the double is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">number</span> <span class="o">=</span> <span class="mf">77.88</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetStaticDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">fidNumber</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>访问方法和静态方法</em></p>
+
+<ul>
+<li>GetMethodID</li>
+<li>Call<type>Method</li>
+<li>GetStaticMethodID</li>
+<li>CallStatic<type>Method</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNICallBackMethod_nativeMethod</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get a class reference for this object</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">thisClass</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the Method ID for method &quot;callback&quot;, which takes no arg and return void</span>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midCallBack</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span> <span class="s">&quot;callback&quot;</span><span class="p">,</span> <span class="s">&quot;()V&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midCallBack</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, call back Java&#39;s callback()</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="c1">// Call back the method (which returns void), baed on the Method ID</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallVoidMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">midCallBack</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midCallBackStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span>
+</span><span class='line'>                               <span class="s">&quot;callback&quot;</span><span class="p">,</span> <span class="s">&quot;(Ljava/lang/String;)V&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midCallBackStr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, call back Java&#39;s called(String)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">jstring</span> <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;Hello from C&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallVoidMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">midCallBackStr</span><span class="p">,</span> <span class="n">message</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midCallBackAverage</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span>
+</span><span class='line'>                                  <span class="s">&quot;callbackAverage&quot;</span><span class="p">,</span> <span class="s">&quot;(II)D&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midCallBackAverage</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jdouble</span> <span class="n">average</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallDoubleMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">midCallBackAverage</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the average is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">average</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midCallBackStatic</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStaticMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span>
+</span><span class='line'>                                 <span class="s">&quot;callbackStatic&quot;</span><span class="p">,</span> <span class="s">&quot;()Ljava/lang/String;&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midCallBackStatic</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jstring</span> <span class="n">resultJNIStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallStaticObjectMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisClass</span><span class="p">,</span> <span class="n">midCallBackStatic</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">resultCStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultJNIStr</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">resultCStr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the returned string is %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">resultCStr</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultJNIStr</span><span class="p">,</span> <span class="n">resultCStr</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>创建java对象和对象数组</h5>
+
+<p><em>创建java对象</em></p>
+
+<ul>
+<li>FindClass</li>
+<li>NewObject</li>
+<li>AllocObject</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIConstructor_getIntegerObject</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jint</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Get a class reference for java.lang.Integer</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;java/lang/Integer&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the Method ID of the constructor which takes an int</span>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midInit</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&quot;&lt;init&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;(I)V&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midInit</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>   <span class="c1">// Call back constructor to allocate a new instance, with an int argument</span>
+</span><span class='line'>   <span class="n">jobject</span> <span class="n">newObj</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">midInit</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Try runnning the toString() on this newly create object</span>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midToString</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">&quot;toString&quot;</span><span class="p">,</span> <span class="s">&quot;()Ljava/lang/String;&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midToString</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jstring</span> <span class="n">resultStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallObjectMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">newObj</span><span class="p">,</span> <span class="n">midToString</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">resultCStr</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultStr</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C: the number is %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">resultCStr</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="k">return</span> <span class="n">newObj</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>创建java数组</em></p>
+
+<ul>
+<li>NewObjectArray</li>
+<li>GetObjectArrayElement</li>
+<li>setObjectArrayElement</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jobjectArray</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIObjectArray_sumAndAverage</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jobjectArray</span> <span class="n">inJNIArray</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Get a class reference for java.lang.Integer</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">classInteger</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;java/lang/Integer&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="c1">// Use Integer.intValue() to retrieve the int</span>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midIntValue</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classInteger</span><span class="p">,</span> <span class="s">&quot;intValue&quot;</span><span class="p">,</span> <span class="s">&quot;()I&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midIntValue</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the value of each Integer object in the array</span>
+</span><span class='line'>   <span class="n">jsize</span> <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetArrayLength</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIArray</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">jint</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">jobject</span> <span class="n">objInteger</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectArrayElement</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inJNIArray</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">objInteger</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">jint</span> <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CallIntMethod</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">objInteger</span><span class="p">,</span> <span class="n">midIntValue</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="kt">double</span> <span class="n">average</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">sum</span> <span class="o">/</span> <span class="n">length</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the sum is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, the average is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">average</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get a class reference for java.lang.Double</span>
+</span><span class='line'>   <span class="n">jclass</span> <span class="n">classDouble</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;java/lang/Double&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Allocate a jobjectArray of 2 java.lang.Double</span>
+</span><span class='line'>   <span class="n">jobjectArray</span> <span class="n">outJNIArray</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObjectArray</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">classDouble</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Construct 2 Double objects by calling the constructor</span>
+</span><span class='line'>   <span class="n">jmethodID</span> <span class="n">midDoubleInit</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classDouble</span><span class="p">,</span> <span class="s">&quot;&lt;init&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;(D)V&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midDoubleInit</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">jobject</span> <span class="n">objSum</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classDouble</span><span class="p">,</span> <span class="n">midDoubleInit</span><span class="p">,</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">sum</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">jobject</span> <span class="n">objAve</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classDouble</span><span class="p">,</span> <span class="n">midDoubleInit</span><span class="p">,</span> <span class="n">average</span><span class="p">);</span>
+</span><span class='line'>   <span class="c1">// Set to the jobjectArray</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetObjectArrayElement</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">outJNIArray</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">objSum</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetObjectArrayElement</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">outJNIArray</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">objAve</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="k">return</span> <span class="n">outJNIArray</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>本地和全局变量</h5>
+
+<p>任何类似FindClass(), GetMethodID(), GetFieldID()返回的引用是一个本地引用。</p>
+
+<p>想要使用全局引用的话，需要使用<code>NewGlobalRef()</code>，<code>DeleteGlobalRef()</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// Global Reference to the Java class &quot;java.lang.Integer&quot;</span>
+</span><span class='line'><span class="k">static</span> <span class="n">jclass</span> <span class="n">classInteger</span><span class="p">;</span>
+</span><span class='line'><span class="k">static</span> <span class="n">jmethodID</span> <span class="n">midIntegerInit</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">jobject</span> <span class="nf">getInteger</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jint</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get a class reference for java.lang.Integer if missing</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">classInteger</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Find java.lang.Integer</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">jclass</span> <span class="n">classIntegerLocal</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">FindClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">&quot;java/lang/Integer&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="c1">// Create a global reference from the local reference</span>
+</span><span class='line'>      <span class="n">classInteger</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewGlobalRef</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classIntegerLocal</span><span class="p">);</span>
+</span><span class='line'>      <span class="c1">// No longer need the local reference, free it!</span>
+</span><span class='line'>      <span class="c1">//(*env)-&gt;DeleteLocalRef(env, classIntegerLocal);</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">classInteger</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Get the Method ID of the Integer&#39;s constructor if missing</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midIntegerInit</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Get Method ID for java.lang.Integer&#39;s constructor</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">midIntegerInit</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classInteger</span><span class="p">,</span> <span class="s">&quot;&lt;init&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;(I)V&quot;</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">midIntegerInit</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="c1">// Call back constructor to allocate a new instance, with an int argument</span>
+</span><span class='line'>   <span class="n">jobject</span> <span class="n">newObj</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">classInteger</span><span class="p">,</span> <span class="n">midIntegerInit</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;In C, constructed java.lang.Integer with number %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">newObj</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIReference_getIntegerObject</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jint</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">getInteger</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span> <span class="nf">Java_TestJNIReference_anotherGetIntegerObject</span>
+</span><span class='line'>          <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">jint</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">getInteger</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">thisObj</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-09-18T14:57:30+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:57 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/jni/'>jni</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/09/18/basic-introduction-of-jni/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/09/18/basic-introduction-of-jni/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/09/12/introducing-fresco/" title="Previous Post: Fresco 简介">&laquo; Fresco 简介</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/11/19/understanding-the-objective-c-runtime/" title="Next Post: 理解 Objective-C Runtime">理解 Objective-C Runtime &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

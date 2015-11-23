@@ -1,0 +1,521 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>理解 Objective-C Runtime - My Octopress Blog</title>
+  <meta name="author" content="Your Name">
+
+  
+  <meta name="description" content="Objective-C扩展了C语言，并加入了面向对象特性和Smalltalk式的消息传递机制。而这个扩展的核心是一个用C和汇编写的Runtime库。它负责加载类的信息，分发函数消息。从而使得c可以面向对象，变成了Objective-C。
+Runtime的核心就是消息传递 (Messaging) I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://IamAlchemist.github.io/blog/2015/11/19/understanding-the-objective-c-runtime">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">My Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="IamAlchemist.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">理解 Objective-C Runtime</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-11-19T13:35:18+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Objective-C扩展了C语言，并加入了面向对象特性和Smalltalk式的消息传递机制。而这个扩展的核心是一个用C和汇编写的Runtime库。它负责加载类的信息，分发函数消息。从而使得c可以面向对象，变成了Objective-C。
+Runtime的核心就是消息传递 (Messaging)</p>
+
+<blockquote><p>I’m sorry that I long ago coined the term “objects” for this topic because it gets many people to focus on the lesser idea. <strong>The big idea is “messaging”</strong> – that is what the kernal[sic] of Smalltalk is all about&hellip; The key in making great and growable systems is much more to design how its modules communicate rather than what their internal properties and behaviors should be.</p></blockquote>
+
+<p><em>&ndash; by Alan Kay</em></p>
+
+<p> <!-- more --></p>
+
+<p>在C语言调用一个方法其实就是跳到内存中的某一点并开始执行一段代码。没有任何动态的特性，因为这在编译时就决定好了。而在 Objective-C中，<code>[object foo]</code>语句并不会立即执行<code>foo</code>这个方法的代码。它是在运行时给<code>object</code>发送一条叫<code>foo</code>的消息。这个消息，也许会由<code>object</code>来处理，也许会被转发给另一个对象，或者不予理睬假装没收到这个消息。多条不同的消息也可以对应同一个方法实现。这些都是在程序运行的时候决定的。</p>
+
+<p>事实上，在编译时Objective-C函数调用的语法都会被翻译成一个C的函数调用 - objc_msgSend().<br/>
+比如，编译器会把</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">target</span> <span class="nl">doMethodWith</span><span class="p">:</span><span class="n">var1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编译成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">objc_msgSend</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="k">@selector</span><span class="p">(</span><span class="nl">doMethodWith</span><span class="p">:),</span><span class="n">var1</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>显然，发送消息并不是直接的函数调用，到objc_msgSend里面就是Objective-C Runtime来处理了。</p>
+
+<h3>objc_object, objc_class 以及 Ojbc_method</h3>
+
+<p>在Objective-C中，本质上，类、对象和方法都是一个C的结构体</p>
+
+<p>比如我们知道<code>id</code>就是指向一个Objective-C的对象的指针，也就是<code>objc_object</code>的实例，其中有一个<code>isa</code>指针，这个<code>isa</code>指向它所属的类。来看看它的定义</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">objc_object</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">Class</span> <span class="n">isa</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="o">*</span><span class="kt">id</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以当你拿到一个<code>id</code>指针之后，就可以获取这个对象的类，并且可以检测其是否响应一个<code>selector</code>。isa指向的<code>objc_class</code>实例的里面其实保存的就是该对象对应的类的信息。定义如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">objc_class</span> <span class="o">*</span><span class="kt">Class</span><span class="p">;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">objc_class</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">Class</span> <span class="n">isa</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">Class</span> <span class="n">super_class</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">long</span> <span class="n">instance_size</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_ivar_list</span> <span class="o">*</span><span class="n">ivars</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_method_list</span> <span class="o">**</span><span class="n">methodLists</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_cache</span> <span class="o">*</span><span class="n">cache</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_protocol_list</span> <span class="o">*</span><span class="n">protocols</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">objc_method_list</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_method_list</span> <span class="o">*</span><span class="n">obsolete</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">method_count</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">objc_method</span> <span class="n">method_list</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们看到这些类的信息包括，继承关系，实现的协议，方法列表，和属性列表，实例大小，ivar的类型和布局等等。其中方法都对应结构体是<code>objc_method</code>，这个结构体其实就是一个key/value对，定义如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">objc_selector</span>  <span class="o">*</span><span class="kt">SEL</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="nf">id</span> <span class="p">(</span><span class="o">*</span><span class="kt">IMP</span><span class="p">)(</span><span class="kt">id</span> <span class="nb">self</span><span class="p">,</span><span class="kt">SEL</span> <span class="n">_cmd</span><span class="p">,...);</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">objc_method</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">SEL</span> <span class="n">method_name</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">method_types</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">IMP</span> <span class="n">method_imp</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>key是所谓的<code>Selector</code>(相当于编译器生成的唯一的标识函数的字符串)；而值就是<code>IMP</code>，一个<code>IMP</code>就是一个函数指针，由编译器生成的，当你发起一个消息之后，最终它会执行的那个代码，就是由这个函数指针指定的。</p>
+
+<p>从这些定义中可以看出， 发送一条消息，也就是<code>objc_msgSend</code>，大概到底做了什么事情。</p>
+
+<p>举<code>objc_msgSend(obj, foo)</code>这个例子来说：</p>
+
+<ul>
+<li>首先，通过 obj 的 isa 指针找到它的 class</li>
+<li>在 class 的 method list 找 foo</li>
+<li>如果 class 中没到 foo，继续往它的 superclass 中找</li>
+<li>一旦找到 foo 这个函数，就去执行它的实现IMP</li>
+</ul>
+
+
+<p><code>block</code>的设计也类似，它也包含了isa的指针</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">Block_literal_1</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="o">*</span><span class="n">isa</span><span class="p">;</span> <span class="c1">// initialized to &amp;_NSConcreteStackBlock or &amp;_NSConcreteGlobalBlock</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以block像object一样也是可以响应消息的。</p>
+
+<h3>MetaClass</h3>
+
+<p><code>isa</code>指向对象就是该object对应的类。也就是Objective-C的类本身也是一个对象，暂时我们称之为类对象(class object)。 它包含的信息包括，继承关系，实现的协议，方法列表，和属性列表，实例大小，ivar的类型和布局等等。当你进行类方法(class method)的调用的时候的时候，比方说</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="bp">NSObject</span> <span class="n">alloc</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>你事实上是把这个消息发给了这个类对象(class object)。</p>
+
+<p>既然class object是一个实例，那么它必然是属于某一个类，这个类被称作metaclass。一个metaclass就是class object的描述，就像一个class是它的object的描述一样。</p>
+
+<p>值得一提的是，metaclass的方法列表就是我们称之为class methods的东西：class本身应该响应的那些selectors。当你发送一个消息给class，也就是metaclass的实例的时候，objc_msgSend()会查找metaclass的方法列表（包括它的父类），来决定是否可以响应。一个class method记录在metaclass里，就像instance method记录在class中。</p>
+
+<p>metaclass也是一个实例，也有父类，也有<code>isa</code>和<code>super_class</code>。最终的源头是一个特殊的root class。不过metaclass的<code>isa</code>指针其实是无关紧要的，因为现实中，没有人会给metaclass object发送消息的。 <br/>
+相对更重要的是metaclass的继承关系，metaclass有着和class一样的平行的继承关系。所以class methods也就相应的有了继承关系。 <br/>
+此外，由于root metaclass的父类是root class，所以每一个class object可以响应root class的instance methods<br/>
+最后任何一个class object都是root class（或者它的子类的）实例</p>
+
+<p>下面这张图能很好的总结上面的结论，始终要记住的是，当一个message发送给一个object的时候，这个object首先根据<code>isa</code>指针来寻找是否可以响应，然后在根据<code>super_class</code>指针在继承链中寻找</p>
+
+<p><img class="center" src="/images/iOS/2015-11-20.png" width="598"></p>
+
+<h3>为啥我们要继承 Apple Classes</h3>
+
+<p>初学Cocoa开发的时候，多数教程都要我们继承一个类比方NSObject，然后我们就开始Coding了。比方说：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">MyObject</span> <span class="o">*</span><span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyObject</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个语句用来初始化一个实例，类似于 C++ 的 new 关键字。这个语句首先会执行MyObject这个类的+alloc方法，所以继承 Apple 的类我们不仅是获得了很多很好用的属性，而且也继承了这种内存分配的方法。</p>
+
+<h3>什么是Class Cache(objc_cache *cache)</h3>
+
+<p>每次发送一个消息的时候，都要去查找方法列表的实现有个问题，效率低。比如一个class往往只有20%的函数会被经常调用，可能占总调用次数的80%。每个消息都需要遍历一次<code>objc_method_list</code>并不合理。如果把经常被调用的函数缓存下来，那可以大大提高函数查询的效率。这也就是<code>objc_class</code>中另一个重要成员<code>objc_cache</code>做的事情 - 再找到foo之后，把foo的<code>method_name</code>作为key，<code>method_imp</code>作为value给存起来。当再次收到foo消息的时候，可以直接在cache里找到，避免去遍历<code>objc_method_list</code>.</p>
+
+<h3>说回 objc_msgSend 这个方法</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="nb">self</span> <span class="nl">printMessageWithString</span><span class="p">:</span><span class="s">@&quot;Hello World!&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>会被编译器翻译成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">objc_msgSend</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span><span class="k">@selector</span><span class="p">(</span><span class="nl">printMessageWithString</span><span class="p">:),</span><span class="s">@&quot;Hello World!&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>objc_msgSend执行的步骤大致是这样：</p>
+
+<ul>
+<li>检测这个selector是不是要忽略的。比如Mac OS X开发，有了垃圾回收就不理会retain,release这些消息了</li>
+<li>检测这个target是不是<code>nil</code>。ObjC的特性是允许对一个<code>nil</code>对象执行任何一个方法不会Crash，因为会被忽略掉</li>
+<li>如果上面两个都过了，那就开始查找这个类的IMP，先从cache里面找，找得到的话，就跳到对应的函数去执行</li>
+<li>如果cache找不到就到成员方法列表里去找，还找不到，就到父类里去找</li>
+<li>最后还找不到的话，就要进行消息转发逻辑</li>
+</ul>
+
+
+<h3>消息转发机制</h3>
+
+<p>在上面的例子中，如果@selector(printMessageWithString:)最终没有找到，通常情况下，程序会在运行时挂掉并抛出<code>unrecognized selector sent to …</code>的异常。但在异常抛出前，Objective-C的运行时会给你三次拯救程序的机会：</p>
+
+<ul>
+<li><strong>Method resolution</strong></li>
+<li><strong>Fast forwarding</strong></li>
+<li><strong>Normal forwarding</strong></li>
+</ul>
+
+
+<h3>Method Resolution</h3>
+
+<p>在找不到消息对应的函数后，首先，Objective-C运行时会调用+resolveInstanceMethod: 或者+resolveClassMethod:，让你有机会提供一个函数实现。如果你添加了函数并返回YES，那运行时系统就会重新启动一次消息发送的过程。以foo为例，你可以这么实现</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">void</span> <span class="nf">fooMethod</span><span class="p">(</span><span class="kt">id</span> <span class="n">obj</span><span class="p">,</span> <span class="kt">SEL</span> <span class="n">_cmd</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Doing foo&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">resolveInstanceMethod:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSEL</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">aSEL</span> <span class="o">==</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">foo</span><span class="p">:)){</span>
+</span><span class='line'>        <span class="n">class_addMethod</span><span class="p">([</span><span class="nb">self</span> <span class="k">class</span><span class="p">],</span> <span class="n">aSEL</span><span class="p">,</span> <span class="p">(</span><span class="kt">IMP</span><span class="p">)</span><span class="n">fooMethod</span><span class="p">,</span> <span class="s">&quot;v@:&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="nb">super</span> <span class="n">resolveInstanceMethod</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Core Data有用到这个方法。NSManagedObjects中properties的getter和setter就是在运行时动态添加的</p>
+
+<p>如果resolve方法返回NO，运行时就会移到下一步：消息转发（Message Forwarding）</p>
+
+<p>PS：iOS 4.3 加入很多新的 runtime 方法，主要都是以 imp 为前缀的方法，比如 imp_implementationWithBlock() 用 block 快速创建一个 imp 。
+上面的例子可以重写成：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">IMP</span> <span class="n">fooIMP</span> <span class="o">=</span> <span class="n">imp_implementationWithBlock</span><span class="p">(</span><span class="o">^</span><span class="p">(</span><span class="kt">id</span> <span class="n">_self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Doing foo&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">class_addMethod</span><span class="p">([</span><span class="nb">self</span> <span class="k">class</span><span class="p">],</span> <span class="n">aSEL</span><span class="p">,</span> <span class="n">fooIMP</span><span class="p">,</span> <span class="s">&quot;v@:&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Fast forwarding</h3>
+
+<p>消息转发（Message Forwarding）首先会执行Fast forwarding，也就是如果目标对象实现了<code>-forwardingTargetForSelector:</code>，Runtime这时就会调用这个方法，给你把这个消息转发给其他对象的机会</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">forwardingTargetForSelector:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">aSelector</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">aSelector</span> <span class="o">==</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">foo</span><span class="p">:)){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">alternateObject</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">forwardingTargetForSelector</span><span class="p">:</span><span class="n">aSelector</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>只要这个方法返回的不是nil和self，整个消息发送的过程就会被重启，当然发送的对象会变成你返回的那个对象。否则，就会继续Normal Fowarding。</p>
+
+<p>这里叫Fast，只是为了区别下一步的转发机制。因为这一步不会创建任何新的对象，但下一步转发会创建一个 NSInvocation 对象，所以相对更快点。</p>
+
+<h3>Normal forwarding</h3>
+
+<p>这一步是Runtime最后一次给你挽救的机会。首先它会发送<code>-methodSignatureForSelector:</code>消息获得函数的参数和返回值类型。如果<code>-methodSignatureForSelector:</code>返回nil，Runtime则会发出<code>-doesNotRecognizeSelector:</code>消息，程序这时也就挂掉了。如果返回了一个函数签名，Runtime就会创建一个<code>NSInvocation</code>对象并发送<code>-forwardInvocation:</code>消息给目标对象。</p>
+
+<p>NSInvocation 实际上就是对一个消息的描述，包括selector 以及参数等信息。所以你可以在<code>-forwardInvocation:</code>里修改传进来的<code>NSInvocation</code>对象，然后发送<code>-invokeWithTarget:</code>消息给它，传进去一个新的目标：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">forwardInvocation:</span><span class="p">(</span><span class="bp">NSInvocation</span> <span class="o">*</span><span class="p">)</span><span class="nv">invocation</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">SEL</span> <span class="n">sel</span> <span class="o">=</span> <span class="n">invocation</span><span class="p">.</span><span class="n">selector</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span><span class="p">([</span><span class="n">alternateObject</span> <span class="nl">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">invocation</span> <span class="nl">invokeWithTarget</span><span class="p">:</span><span class="n">alternateObject</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="nb">self</span> <span class="nl">doesNotRecognizeSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Cocoa 里很多地方都利用到了消息传递机制来对语言进行扩展，如 Proxies、NSUndoManager 跟 Responder Chain。NSProxy 就是专门用来作为代理转发消息的；NSUndoManager 截取一个消息之后再发送；而 Responder Chain 保证一个消息转发给合适的响应者。</p>
+
+<p>Apple 设计这种机制的原因之一就是——用来模拟多重继承（ObjC 原生是不支持多重继承的）。或者把复杂设计隐藏起来。</p>
+
+<h4>参考资料</h4>
+
+<p><a href="http://cocoasamurai.blogspot.jp/2010/01/understanding-objective-c-runtime.html">Understanding the Objective-C Runtime</a></p>
+
+<p><a href="http://tech.glowing.com/cn/objective-c-runtime/">Objective-C Runtime</a></p>
+
+<p><a href="http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html">Classes and metaclasses</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Your Name
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-11-19T13:35:18+08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:35 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>ios,</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://IamAlchemist.github.io/blog/2015/11/19/understanding-the-objective-c-runtime/" data-via="" data-counturl="http://IamAlchemist.github.io/blog/2015/11/19/understanding-the-objective-c-runtime/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/09/18/basic-introduction-of-jni/" title="Previous Post: JNI基础介绍">&laquo; JNI基础介绍</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Your Name -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
